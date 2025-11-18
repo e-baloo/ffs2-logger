@@ -4,9 +4,10 @@
  * String formatting with Python-style placeholders
  * Based on davidchambers/string-format
  */
+/** biome-ignore-all lint/suspicious/noExplicitAny: use any for flexibility */
 
-import { ValueError } from './ValueError';
 import type { FormatFunction, Transformers } from './types';
+import { ValueError } from './ValueError';
 
 /**
  * Creates a format function with custom transformers
@@ -22,7 +23,7 @@ import type { FormatFunction, Transformers } from './types';
  * fmt('Hello, {!upper}!', 'alice'); // => 'Hello, ALICE!'
  */
 export function create(transformers: Transformers): FormatFunction {
-    return function (template: string, ...args: any[]): string {
+    return (template: string, ...args: any[]): string => {
         let idx = 0;
         let state: 'UNDEFINED' | 'IMPLICIT' | 'EXPLICIT' = 'UNDEFINED';
 
@@ -30,7 +31,7 @@ export function create(transformers: Transformers): FormatFunction {
             /([{}])\1|[{](.*?)(?:!(.+?))?[}]/g,
             (_match: string, literal: string | undefined, _key: string, xf: string | undefined): string => {
                 // Handle escaped braces {{ and }}
-                if (literal != null) {
+                if (literal !== null && literal !== undefined) {
                     return literal;
                 }
 
@@ -55,14 +56,14 @@ export function create(transformers: Transformers): FormatFunction {
                 const path = key.split('.');
 
                 // If first component is not a number, prepend '0'
-                const lookupPath = /^\d+$/.test(path[0]) ? path : ['0'].concat(path);
+                const lookupPath = path.length > 0 && path[0] && /^\d+$/.test(path[0]) ? path : ['0'].concat(path);
 
                 // Resolve the value by following the path
                 const value = lookupPath
                     .reduce(
                         (maybe: any[], currentKey: string): any[] => {
                             return maybe.reduce((_: any, x: any): any[] => {
-                                if (x != null && currentKey in Object(x)) {
+                                if (x !== null && x !== undefined && currentKey in Object(x)) {
                                     const val = x[currentKey];
                                     // Invoke if it's a function
                                     return [typeof val === 'function' ? val.call(x) : val];
@@ -70,19 +71,22 @@ export function create(transformers: Transformers): FormatFunction {
                                 return [];
                             }, []);
                         },
-                        [args],
+                        [args]
                     )
                     .reduce((_: any, x: any): any => x, '');
 
                 // Apply transformer if specified
-                if (xf == null) {
+                if (xf === null || xf === undefined) {
                     return value;
                 }
-                if (Object.prototype.hasOwnProperty.call(transformers, xf)) {
-                    return transformers[xf](value);
+                if (Object.hasOwn(transformers, xf)) {
+                    const transformer = transformers[xf];
+                    if (transformer) {
+                        return transformer(value);
+                    }
                 }
                 throw new ValueError(`no transformer named "${xf}"`);
-            },
+            }
         );
     };
 }

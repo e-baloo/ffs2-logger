@@ -1,5 +1,5 @@
-import { describe, expect, it, beforeEach } from '@jest/globals';
-import { LOG_PRIORITY, LogLevel } from '../types/LogLevel';
+import { beforeEach, describe, expect, it } from '@jest/globals';
+import { LOG_PRIORITY, type LogLevel } from '../types/LogLevel';
 import { LogLevelProvider } from './LogLevelProvider';
 
 describe('LogLevelProvider', () => {
@@ -81,7 +81,7 @@ describe('LogLevelProvider', () => {
         });
 
         it('should return consistent results for multiple calls', () => {
-            const testLevel = LOG_PRIORITY[0][0]; // First level from first priority group
+            const testLevel: LogLevel = 'fatal'; // Use known first level
             const firstCall = provider.logLevelPriority(testLevel);
             const secondCall = provider.logLevelPriority(testLevel);
             expect(firstCall).toBe(secondCall);
@@ -128,7 +128,7 @@ describe('LogLevelProvider', () => {
     describe('priority cache functionality', () => {
         it('should build priority cache correctly for all log levels', () => {
             LOG_PRIORITY.forEach((levels, expectedPriority) => {
-                levels.forEach((level) => {
+                levels.forEach(level => {
                     expect(provider.logLevelPriority(level)).toBe(expectedPriority);
                 });
             });
@@ -136,9 +136,18 @@ describe('LogLevelProvider', () => {
 
         it('should handle all valid log levels', () => {
             const allLevels: LogLevel[] = [
-                'silly', 'debug', 'trace', 'verbose', 
-                'log', 'info', 'http', 'data', 
-                'warn', 'httpError', 'error', 'fatal'
+                'silly',
+                'debug',
+                'trace',
+                'verbose',
+                'log',
+                'info',
+                'http',
+                'data',
+                'warn',
+                'httpError',
+                'error',
+                'fatal',
             ];
 
             allLevels.forEach(level => {
@@ -174,7 +183,7 @@ describe('LogLevelProvider', () => {
             // Silly should allow everything
             expect(sillyProvider.isLogLevelEnabled('silly', 'fatal')).toBe(true);
             expect(sillyProvider.isLogLevelEnabled('silly', 'debug')).toBe(true);
-            
+
             // Fatal should only allow fatal
             expect(fatalProvider.isLogLevelEnabled('fatal', 'fatal')).toBe(true);
             expect(fatalProvider.isLogLevelEnabled('fatal', 'error')).toBe(false);

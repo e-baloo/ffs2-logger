@@ -26,6 +26,7 @@ export interface FormatToken {
     /** Use alternate form */
     alternate?: boolean;
     /** Argument value to format */
+    // biome-ignore lint/suspicious/noExplicitAny: use any for flexibility
     arg?: any;
     /** Maximum width for string truncation */
     maxWidth?: number;

@@ -25,7 +25,7 @@ if (require.main === module) {
 
     // Float formatting
     console.log('\n3. Float formatting:');
-    console.log(format('Pi: %.2f', 3.14159));
+    console.log(format('Pi: %.2f', Math.PI));
     console.log(format('Scientific: %e', 1234.5));
     console.log(format('Compact: %g', 0.000123));
 

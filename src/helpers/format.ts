@@ -33,6 +33,8 @@ import { formatTokenize } from './formatTokenize';
  * format('[%05d]', 42);
  * // => '[00042]'
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: use any for flexibility
 export function format(formatString: string, ...args: any[]): string {
     const tokens = formatTokenize(formatString);
     return formatInterpolate(tokens, ...args);

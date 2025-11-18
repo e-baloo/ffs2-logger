@@ -74,11 +74,11 @@ if (require.main === module) {
     // 7. Custom transformers
     console.log('7. Custom transformers:');
     const fmt = create({
-        upper: (s) => s.toUpperCase(),
-        lower: (s) => s.toLowerCase(),
-        escape: (s) => s.replace(/[&<>"'`]/g, (c: string) => `&#${c.charCodeAt(0)};`),
-        trim: (s) => s.trim(),
-        reverse: (s) => s.split('').reverse().join(''),
+        upper: s => s.toUpperCase(),
+        lower: s => s.toLowerCase(),
+        escape: s => s.replace(/[&<>"'`]/g, (c: string) => `&#${c.charCodeAt(0)};`),
+        trim: s => s.trim(),
+        reverse: s => s.split('').reverse().join(''),
     });
 
     console.log(fmt('Hello, {!upper}!', 'alice'));

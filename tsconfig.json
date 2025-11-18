@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,        
         "strictNullChecks": true,
         "noImplicitAny": true,
-        "strict": true,
         "declaration": true,
         "target": "ESNext",
         "removeComments": true,

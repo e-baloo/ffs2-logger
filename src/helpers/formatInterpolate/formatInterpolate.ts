@@ -15,6 +15,7 @@ import { zeroPad } from './zeroPad';
  * Returns a boolean indicating whether a value is `NaN`.
  */
 function isnan(value: unknown): boolean {
+    // biome-ignore lint/suspicious/noSelfCompare: use self comparison to check for NaN
     return value !== value;
 }
 
@@ -26,10 +27,18 @@ function initialize(token: FormatToken): FormatToken {
     const out: FormatToken = {
         specifier: token.specifier,
         precision: token.precision === undefined ? 1 : token.precision,
-        width: token.width,
         flags: token.flags || '',
-        mapping: token.mapping,
     };
+
+    // Add optional properties only if they exist
+    if (token.width !== undefined) {
+        out.width = token.width;
+    }
+
+    if (token.mapping !== undefined) {
+        out.mapping = token.mapping;
+    }
+
     return out;
 }
 
@@ -47,6 +56,8 @@ function initialize(token: FormatToken): FormatToken {
  * const out = formatInterpolate(tokens, 'boop');
  * // returns 'beep boop'
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: use any for flexibility
 export function formatInterpolate(tokens: Token[], ...args: any[]): string {
     if (!Array.isArray(tokens)) {
         throw new TypeError(`invalid argument. First argument must be an array. Value: \`${tokens}\`.`);
@@ -60,13 +71,13 @@ export function formatInterpolate(tokens: Token[], ...args: any[]): string {
 
         if (isString(token)) {
             out += token;
-        } else {
+        } else if (token) {
             const hasPeriod = token.precision !== undefined;
             token = initialize(token);
 
             if (!token.specifier) {
                 throw new TypeError(
-                    `invalid argument. Token is missing \`specifier\` property. Index: \`${i}\`. Value: \`${token}\`.`,
+                    `invalid argument. Token is missing \`specifier\` property. Index: \`${i}\`. Value: \`${token}\`.`
                 );
             }
 
@@ -104,7 +115,7 @@ export function formatInterpolate(tokens: Token[], ...args: any[]): string {
                 pos += 1;
                 if (isnan(token.width)) {
                     throw new TypeError(
-                        `the argument for * width at position ${pos} is not a number. Value: \`${token.width}\`.`,
+                        `the argument for * width at position ${pos} is not a number. Value: \`${token.width}\`.`
                     );
                 }
                 if ((token.width as number) < 0) {
@@ -119,7 +130,7 @@ export function formatInterpolate(tokens: Token[], ...args: any[]): string {
                     pos += 1;
                     if (isnan(token.precision)) {
                         throw new TypeError(
-                            `the argument for * precision at position ${pos} is not a number. Value: \`${token.precision}\`.`,
+                            `the argument for * precision at position ${pos} is not a number. Value: \`${token.precision}\`.`
                         );
                     }
                     if ((token.precision as number) < 0) {
@@ -198,6 +209,8 @@ export function formatInterpolate(tokens: Token[], ...args: any[]): string {
 
             out += token.arg || '';
             pos += 1;
+        } else {
+            throw new TypeError(`invalid token at index ${i}: token is undefined`);
         }
     }
 

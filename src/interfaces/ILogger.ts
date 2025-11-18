@@ -1,7 +1,7 @@
-import { LogEvent } from '../types/LogEvent';
-import { LogMessage } from '../types/LogMessage';
-import { ILogLevel } from './ILogLevel';
-import { ISymbolIdentifier } from './ISymbolIdentifier';
+import type { LogEvent } from '../types/LogEvent';
+import type { LogMessage } from '../types/LogMessage';
+import type { ILogLevel } from './ILogLevel';
+import type { ISymbolIdentifier } from './ISymbolIdentifier';
 
 export interface ILogger extends ISymbolIdentifier, ILogLevel {
     /**

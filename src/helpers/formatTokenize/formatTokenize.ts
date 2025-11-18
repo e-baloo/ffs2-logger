@@ -25,12 +25,24 @@ const RE = /%(?:([1-9]\d*)\$)?([0 +\-#]*)(\*|\d+)?(?:(\.)(\*|\d+)?)?[hlL]?([%A-Z
  */
 function parse(match: RegExpExecArray): FormatToken {
     const token: FormatToken = {
-        mapping: match[1] ? Number.parseInt(match[1], 10) : undefined,
-        flags: match[2],
-        width: match[3],
-        precision: match[5],
-        specifier: match[6],
+        flags: match[2] ?? '',
+        specifier: match[6] ?? '',
     };
+
+    // Add mapping only if it exists
+    if (match[1]) {
+        token.mapping = Number.parseInt(match[1], 10);
+    }
+
+    // Add width only if it exists
+    if (match[3]) {
+        token.width = match[3];
+    }
+
+    // Add precision only if it exists
+    if (match[5]) {
+        token.precision = match[5];
+    }
 
     // Special case: .* or . with no precision specified means precision of 1
     if (match[4] === '.' && match[5] === undefined) {

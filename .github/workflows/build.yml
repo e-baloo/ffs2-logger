@@ -1,45 +1,48 @@
 name: Build
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [20.x, 22.x]
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        strategy:
+            matrix:
+                node-version: [22.x]
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.16.1
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 10.16.1
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Setup Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "pnpm"
 
-      - name: Run build
-        run: pnpm build
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts-node-${{ matrix.node-version }}
-          path: |
-            dist/
-            !dist/**/*.map
-          retention-days: 7
+            - name: Check code quality
+              run: pnpm quality
+
+            - name: Run build
+              run: pnpm build
+
+            - name: Upload build artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-artifacts-node-${{ matrix.node-version }}
+                  path: |
+                      dist/
+                      !dist/**/*.map
+                  retention-days: 7

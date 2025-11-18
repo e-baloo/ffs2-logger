@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noControlCharactersInRegex: color codes */
 type ColorTextFn = (text: string) => string;
 
 const isColorAllowed = () => !process.env.NO_COLOR;
@@ -13,7 +14,7 @@ export const clc = {
 
     level: {
         fatal: colorIfAllowed(
-            (text: string) => `${colors.foreground.black}${colors.background.red}${text}${colors.reset}`,
+            (text: string) => `${colors.foreground.black}${colors.background.red}${text}${colors.reset}`
         ),
         //   'data' | ;
         // httpError: colorIfAllowed(
@@ -22,11 +23,11 @@ export const clc = {
         // ),
         error: colorIfAllowed(
             (text: string) =>
-                `${colors.blink}${colors.foreground.red}${text}${colors.reset}${colors.foreground.default}`,
+                `${colors.blink}${colors.foreground.red}${text}${colors.reset}${colors.foreground.default}`
         ),
         warn: colorIfAllowed(
             (text: string) =>
-                `${colors.blink}${colors.foreground.yellow}${text}${colors.reset}${colors.foreground.default}`,
+                `${colors.blink}${colors.foreground.yellow}${text}${colors.reset}${colors.foreground.default}`
         ),
 
         info: colorIfAllowed((text: string) => `${colors.foreground.green}${text}${colors.foreground.default}`),
@@ -43,13 +44,12 @@ export const clc = {
     },
 
     context: colorIfAllowed(
-        (text: string) => ` ${colors.foreground.blue}${text}${colors.reset}${colors.foreground.default}`,
+        (text: string) => ` ${colors.foreground.blue}${text}${colors.reset}${colors.foreground.default}`
     ),
 };
 export const yellow = colorIfAllowed((text: string) => `\x1B[38;5;3m${text}\x1B[39m`);
 
 export const colors = {
-    // eslint-disable-next-line no-control-regex
     uncolored: (str: string) => str.replace(/\x1B\[\d+m/gi, ''),
     reset: '\x1b[0m',
     bright: '\x1b[1m',

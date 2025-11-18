@@ -44,7 +44,7 @@ describe('formatInterpolate', () => {
 
     it('should format float with precision', () => {
         const tokens: Token[] = ['Pi: ', { specifier: 'f', precision: 2 }];
-        const result = formatInterpolate(tokens, 3.14159);
+        const result = formatInterpolate(tokens, Math.PI);
         expect(result).toBe('Pi: 3.14');
     });
 

@@ -1,14 +1,14 @@
 import { clc } from '../helpers/cli-colors.util';
 import { stringFormat } from '../helpers/stringFormat/stringFormat';
-import { ILoggerAppender } from '../interfaces/ILoggerAppender';
-import { ILoggerService } from '../interfaces/ILoggerService';
-import { LogEvent } from '../types/LogEvent';
-import { LogLevel } from '../types/LogLevel';
+import type { ILoggerAppender } from '../interfaces/ILoggerAppender';
+import type { ILoggerService } from '../interfaces/ILoggerService';
+import type { LogEvent } from '../types/LogEvent';
+import type { LogLevel } from '../types/LogLevel';
 
 export class ConsoleAppender implements ILoggerAppender {
     private level: LogLevel = 'silly';
 
-    constructor(private service : ILoggerService) { }
+    constructor(private service: ILoggerService) {}
 
     getLogLevel(): LogLevel {
         return this.level;
@@ -25,8 +25,11 @@ export class ConsoleAppender implements ILoggerAppender {
             events = [events];
         }
 
-        events.forEach((event) => {
-            if (this.service.getLogLevelProvider() && !this.service.getLogLevelProvider().isLogLevelEnabled(this.getLogLevel(), event.level)) {
+        events.forEach(event => {
+            if (
+                this.service.getLogLevelProvider() &&
+                !this.service.getLogLevelProvider().isLogLevelEnabled(this.getLogLevel(), event.level)
+            ) {
                 return;
             }
 
@@ -57,12 +60,7 @@ export class ConsoleAppender implements ILoggerAppender {
         });
     }
 
-    private formattedTemplate(data: {
-        date: string;
-        level: string;
-        context: string;
-        message: string;
-    }): string {
+    private formattedTemplate(data: { date: string; level: string; context: string; message: string }): string {
         return stringFormat(this.template, data);
     }
 
@@ -141,5 +139,4 @@ export class ConsoleAppender implements ILoggerAppender {
                 return clc.level.trace;
         }
     }
-
 }

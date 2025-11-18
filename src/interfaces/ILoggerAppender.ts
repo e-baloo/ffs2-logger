@@ -1,7 +1,7 @@
-import { LogEvent } from '../types/LogEvent';
-import { ILifecycle } from './ILifecycle';
-import { ILogLevel } from './ILogLevel';
-import { ISymbolIdentifier } from './ISymbolIdentifier';
+import type { LogEvent } from '../types/LogEvent';
+import type { ILifecycle } from './ILifecycle';
+import type { ILogLevel } from './ILogLevel';
+import type { ISymbolIdentifier } from './ISymbolIdentifier';
 
 export interface ILoggerAppender extends ILifecycle, ISymbolIdentifier, ILogLevel {
     append(message: LogEvent | LogEvent[]): Promise<void>;

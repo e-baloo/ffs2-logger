@@ -1,5 +1,5 @@
-import { ILogLevelProvider } from '../interfaces/ILogLevelProvider';
-import { LOG_LEVEL, LOG_PRIORITY, LogLevel } from '../types/LogLevel';
+import type { ILogLevelProvider } from '../interfaces/ILogLevelProvider';
+import { LOG_LEVEL, LOG_PRIORITY, type LogLevel } from '../types/LogLevel';
 
 const DEFAULT_LOG_LEVEL: LogLevel = 'log';
 
@@ -13,7 +13,7 @@ export class LogLevelProvider implements ILogLevelProvider {
         this.priorityCache = this.buildPriorityCache();
     }
 
-    private getProcessLogLevel(): LogLevel {
+    protected getProcessLogLevel(): LogLevel {
         const processLogLevel = process.env.LOG_LEVEL;
 
         if (!processLogLevel) {
@@ -27,10 +27,10 @@ export class LogLevelProvider implements ILogLevelProvider {
         return processLogLevel as LogLevel;
     }
 
-    private buildPriorityCache(): Record<LogLevel, number> {
+    protected buildPriorityCache(): Record<LogLevel, number> {
         const cache: Partial<Record<LogLevel, number>> = {};
         LOG_PRIORITY.forEach((levels, index) => {
-            levels.forEach((level) => {
+            levels.forEach(level => {
                 cache[level] = index;
             });
         });

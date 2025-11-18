@@ -1,5 +1,5 @@
-import { LogEvent } from '../types/LogEvent';
-import { ILoggerAppender } from './ILoggerAppender';
+import type { LogEvent } from '../types/LogEvent';
+import type { ILoggerAppender } from './ILoggerAppender';
 
 export interface ILoggerAppenders {
     append(message: LogEvent | LogEvent[]): Promise<void>;

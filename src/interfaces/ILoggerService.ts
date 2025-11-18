@@ -1,9 +1,9 @@
-import { LogLevel } from '../types/LogLevel';
-import { IGetterLogLevel } from './IGetLogLevel';
-import { IisLogLevelEnabled } from './IisLogLevelEnabled';
-import { ILogger } from './ILogger';
-import { ILogLevelProvider } from './ILogLevelProvider';
-import { ISymbolIdentifier } from './ISymbolIdentifier';
+import type { LogLevel } from '../types/LogLevel';
+import type { IGetterLogLevel } from './IGetLogLevel';
+import type { IisLogLevelEnabled } from './IisLogLevelEnabled';
+import type { ILogger } from './ILogger';
+import type { ILogLevelProvider } from './ILogLevelProvider';
+import type { ISymbolIdentifier } from './ISymbolIdentifier';
 
 export interface ILoggerService extends ISymbolIdentifier, IGetterLogLevel, IisLogLevelEnabled {
     createLogger(context: string, option?: { logLevel?: LogLevel }): ILogger;

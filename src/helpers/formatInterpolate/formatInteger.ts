@@ -31,9 +31,9 @@ export function formatInteger(token: FormatToken): string {
             // Case: %x, %X (hexadecimal)
             base = 16;
             break;
-        case 'd':
-        case 'i':
-        case 'u':
+        // case 'd':
+        // case 'i':
+        // case 'u':
         default:
             // Case: %d, %i, %u (decimal)
             base = 10;

@@ -1,6 +1,6 @@
-import { LOGGER_SERVICE } from "..";
-import { ConsoleAppender } from "../appenders/ConsoleAppender";
-import { LOG_LEVEL } from "../types/LogLevel";
+import { LOGGER_SERVICE } from '..';
+import { ConsoleAppender } from '../appenders/ConsoleAppender';
+import { LOG_LEVEL } from '../types/LogLevel';
 
 const LOGGER = LOGGER_SERVICE.createLogger('Logger', { logLevel: 'silly' });
 
@@ -14,29 +14,37 @@ console.log(LOGGER_SERVICE.listAppenders());
 // LOGGER.trace(new Error('test'));
 // LOGGER.debug({ test: 123 });
 
-LOG_LEVEL.forEach((level) => {
-    LOGGER.sendEvent({ message: `Testing log level: ${level}`, level, context: 'Initial'});
+LOG_LEVEL.forEach(level => {
+    LOGGER.sendEvent({ message: `Testing log level: ${level}`, level, context: 'Initial' });
 });
 
 LOGGER_SERVICE.setLogLevel('warn');
 console.log(`LoggerService log level set to: ${LOGGER_SERVICE.getLogLevel()}`);
 
-LOG_LEVEL.forEach((level) => {
-    LOGGER.sendEvent({ message: `Testing log level after change: ${level}`, level, context: 'AfterChange'});
+LOG_LEVEL.forEach(level => {
+    LOGGER.sendEvent({ message: `Testing log level after change: ${level}`, level, context: 'AfterChange' });
 });
 
 LOGGER_SERVICE.setLogLevel('silly');
 console.log(`LoggerService log level set to: ${LOGGER_SERVICE.getLogLevel()}`);
 
-LOG_LEVEL.forEach((level) => {
-    LOGGER.sendEvent({ message: `Testing log level after second change: ${level}`, level, context: 'AfterSecondChange'});
+LOG_LEVEL.forEach(level => {
+    LOGGER.sendEvent({
+        message: `Testing log level after second change: ${level}`,
+        level,
+        context: 'AfterSecondChange',
+    });
 });
 
 consoleAppender.setLogLevel('error');
 console.log(`ConsoleAppender log level set to: ${consoleAppender.getLogLevel()}`);
 
-LOG_LEVEL.forEach((level) => {
-    LOGGER.sendEvent({ message: `Testing log level after appender change: ${level}`, level, context: 'AfterAppenderChange'});
+LOG_LEVEL.forEach(level => {
+    LOGGER.sendEvent({
+        message: `Testing log level after appender change: ${level}`,
+        level,
+        context: 'AfterAppenderChange',
+    });
 });
 
 LOGGER_SERVICE.addAppender(new ConsoleAppender(LOGGER_SERVICE));
@@ -44,6 +52,10 @@ LOGGER_SERVICE.addAppender(new ConsoleAppender(LOGGER_SERVICE));
 console.log(`Total appenders after adding another: ${LOGGER_SERVICE.listAppenders().length}`);
 
 LOGGER.info('LoggerService test completed.');
-LOG_LEVEL.forEach((level) => {
-    LOGGER.sendEvent({ message: `Testing log level after appender change: ${level}`, level, context: 'AfterAppenderChange'});
+LOG_LEVEL.forEach(level => {
+    LOGGER.sendEvent({
+        message: `Testing log level after appender change: ${level}`,
+        level,
+        context: 'AfterAppenderChange',
+    });
 });

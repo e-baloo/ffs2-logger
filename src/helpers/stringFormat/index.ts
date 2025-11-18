@@ -4,6 +4,6 @@
  * Public API for string-format
  */
 
-export { stringFormat, create, extend } from './stringFormat';
+export { create, extend, stringFormat } from './stringFormat';
+export type { FormatFunction, Transformer, Transformers } from './types';
 export { ValueError } from './ValueError';
-export type { Transformers, Transformer, FormatFunction } from './types';

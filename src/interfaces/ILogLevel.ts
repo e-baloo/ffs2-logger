@@ -1,4 +1,4 @@
-import { IGetterLogLevel } from './IGetLogLevel';
-import { ISetterLogLevel } from './ISettreLogLevel';
+import type { IGetterLogLevel } from './IGetLogLevel';
+import type { ISetterLogLevel } from './ISettreLogLevel';
 
 export interface ILogLevel extends IGetterLogLevel, ISetterLogLevel {}
