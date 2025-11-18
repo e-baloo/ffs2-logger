@@ -4,8 +4,8 @@ import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import type { ILoggerService } from '../../interfaces/ILoggerService';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
-import { ConsoleFormatter } from './ConsoleFormatter';
-import { ConsolePrinter } from './ConsolePrinter';
+import { globalContainer } from '../../config/DIConfig';
+import { CONSOLE_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
 
 
 
@@ -16,12 +16,18 @@ import { ConsolePrinter } from './ConsolePrinter';
 
 export class ConsoleAppender implements ILoggerAppender {
     private level: LogLevel = 'silly';
+    private readonly formatter: IConsoleFormatter;
+    private readonly printer: IConsolePrinter;
 
     constructor(
         private readonly service: ILoggerService,
-        private readonly formatter: IConsoleFormatter = new ConsoleFormatter(),
-        private readonly printer: IConsolePrinter = new ConsolePrinter()
-    ) { }
+        formatter?: IConsoleFormatter,
+        printer?: IConsolePrinter
+    ) {
+        // Utilise le DI container si les dépendances ne sont pas fournies
+        this.formatter = formatter ?? globalContainer.resolve(CONSOLE_FORMATTER_TOKEN);
+        this.printer = printer ?? globalContainer.resolve(CONSOLE_PRINTER_TOKEN);
+    }
 
     getLogLevel(): LogLevel {
         return this.level;
