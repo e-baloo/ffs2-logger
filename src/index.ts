@@ -9,7 +9,7 @@ export * from './types/LogLevel';
 // Performance optimizations exports
 export * from './helpers/LogEventPool';
 export * from './helpers/LazyFormatterRegistry';
-export * from './appenders/base/AsyncBatchAppender';
+export * from './appenders/base/AAsyncBatchAppender';
 export * from './appenders/FileAsyncBatchAppender';
 
 const LOGGER_SERVICE = new LoggerService();

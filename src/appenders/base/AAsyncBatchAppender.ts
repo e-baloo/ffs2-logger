@@ -3,10 +3,10 @@
  * Groups log events and processes them in batches for better performance
  */
 
-import type { LogEvent } from '../../types/LogEvent';
 import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
-import type { LogLevel } from '../../types/LogLevel';
 import { logEventPool, type PoolableLogEvent } from '../../helpers/LogEventPool';
+import type { LogEvent } from '../../types/LogEvent';
+import type { LogLevel } from '../../types/LogLevel';
 
 export interface BatchConfig {
     /** Maximum number of events in a batch */
@@ -30,7 +30,7 @@ export interface BatchStats {
     retries: number;
 }
 
-export abstract class AsyncBatchAppender implements ILoggerAppender {
+export abstract class AAsyncBatchAppender implements ILoggerAppender {
     protected level: LogLevel = 'info';
     protected readonly symbolIdentifier: symbol;
     protected batch: LogEvent[] = [];

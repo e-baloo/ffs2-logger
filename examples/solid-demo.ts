@@ -7,7 +7,7 @@ import {
     LOGGER_SERVICE,
     logEventPool,
     lazyFormatterRegistry,
-    AsyncBatchAppender,
+    AAsyncBatchAppender,
     type ILoggerAppender,
     type LogLevel
 } from '../src/index';
@@ -18,7 +18,7 @@ import type { LogEvent } from '../src/types/LogEvent';
 // ==========================================
 
 // Extension 2: Nouvel appender via héritage
-class MemoryAppender extends AsyncBatchAppender {
+class MemoryAppender extends AAsyncBatchAppender {
     private logs: string[] = [];
 
     constructor() {

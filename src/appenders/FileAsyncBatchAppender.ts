@@ -7,7 +7,7 @@ import { writeFile, appendFile, access } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import path from 'node:path';
 import type { LogEvent } from '../types/LogEvent';
-import { AsyncBatchAppender, type BatchConfig } from './base/AsyncBatchAppender';
+import { AAsyncBatchAppender, type BatchConfig } from './base/AAsyncBatchAppender';
 
 export interface FileAsyncBatchConfig extends BatchConfig {
     /** File path to write logs to */
@@ -20,7 +20,7 @@ export interface FileAsyncBatchConfig extends BatchConfig {
     formatter?: (event: LogEvent) => string;
 }
 
-export class FileAsyncBatchAppender extends AsyncBatchAppender {
+export class FileAsyncBatchAppender extends AAsyncBatchAppender {
     private readonly filePath: string;
     private readonly appendToFile: boolean;
     private readonly formatter: (event: LogEvent) => string;
