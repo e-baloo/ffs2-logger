@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "strict": true,
+        "declaration": true,
+        "target": "ESNext",
+        "removeComments": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitThis": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
+        "strictPropertyInitialization": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "moduleResolution": "nodenext",
+        "jsx": "react-jsx",
+        "lib": ["ES6", "DOM", "ESNext"],
+        "module": "nodenext",
+        "types": ["node", "jest"],
+        "outDir": "./dist",
+        "rootDir": "./src",
+    },
+    
+    "ts-node": {
+        // It is faster to skip typechecking.
+        // Remove if you want ts-node to do typechecking.
+        "transpileOnly": false,
+        "files": true,
+        // "require": ["tsconfig-paths/register"],
+        "compilerOptions": {
+            // compilerOptions specified here will override those declared below,
+            // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+            // different options with a single tsconfig.json.
+        }
+    },
+    "include": [
+        "src/**/*.ts"  
+    ],
+    "exclude": ["node_modules", "dist"]
+}
