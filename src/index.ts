@@ -1,4 +1,4 @@
-import { ConsoleAppender } from './appenders/ConsoleAppender';
+import { ConsoleAppender } from './appenders/console/ConsoleAppender';
 import { LoggerService } from './services/LoggerService';
 
 export * from './interfaces/ILogger';

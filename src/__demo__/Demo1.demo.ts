@@ -1,5 +1,5 @@
 import { LOGGER_SERVICE } from '..';
-import { ConsoleAppender } from '../appenders/ConsoleAppender';
+import { ConsoleAppender } from '../appenders/console/ConsoleAppender';
 import { LOG_LEVEL } from '../types/LogLevel';
 
 const LOGGER = LOGGER_SERVICE.createLogger('Logger', { logLevel: 'silly' });
