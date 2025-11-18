@@ -3,11 +3,11 @@
  * Converted to TypeScript from stdlib-js/string-base-format-interpolate
  */
 
-export { formatInterpolate } from './formatInterpolate';
-export { formatInteger } from './formatInteger';
 export { formatDouble } from './formatDouble';
-export { zeroPad } from './zeroPad';
-export { spacePad } from './spacePad';
-export { isString } from './isString';
+export { formatInteger } from './formatInteger';
+export { formatInterpolate } from './formatInterpolate';
 export { isNumber } from './isNumber';
+export { isString } from './isString';
+export { spacePad } from './spacePad';
 export type { FormatToken, Token } from './types';
+export { zeroPad } from './zeroPad';

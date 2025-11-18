@@ -1,10 +1,10 @@
 // import { isLogLevelEnabled } from '../helpers/logLevel';
-import { ILogger } from '../interfaces/ILogger';
-import { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
-import { ILoggerService } from '../interfaces/ILoggerService';
-import { LogEvent } from '../types/LogEvent';
-import { LogLevel } from '../types/LogLevel';
-import { LogMessage } from '../types/LogMessage';
+import type { ILogger } from '../interfaces/ILogger';
+import type { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
+import type { ILoggerService } from '../interfaces/ILoggerService';
+import type { LogEvent } from '../types/LogEvent';
+import type { LogLevel } from '../types/LogLevel';
+import type { LogMessage } from '../types/LogMessage';
 
 export abstract class ALogger implements ILogger {
     private readonly symbolIdentifier: symbol;
@@ -13,7 +13,7 @@ export abstract class ALogger implements ILogger {
         private readonly context: string,
         private readonly service: ILoggerService,
         private appenders: ILoggerAppenders,
-        private logLevel: LogLevel = 'info',
+        private logLevel: LogLevel = 'info'
     ) {
         this.symbolIdentifier = Symbol(`Logger:${context}`);
     }
@@ -75,7 +75,6 @@ export abstract class ALogger implements ILogger {
         this._sendEvent(message, 'fatal');
     }
 
-
     async sendEvent(event: LogEvent): Promise<void> {
         if (!this.service.isLogLevelEnabled(this.service.getLogLevel(), event.level)) {
             return;
@@ -92,6 +91,7 @@ export abstract class ALogger implements ILogger {
         // Build LogEvent with proper field extraction
         const event: LogEvent = {
             context: this.getContext(),
+            // biome-ignore lint/suspicious/noExplicitAny: TODO fix any
             level: level as any,
             timestamp: Date.now(),
         };

@@ -3,6 +3,7 @@
  *
  * Type definitions for string-format
  */
+/** biome-ignore-all lint/suspicious/noExplicitAny: use any for flexibility */
 
 /**
  * Transformer function type
@@ -20,4 +21,5 @@ export type Transformers = Record<string, Transformer>;
  * Format function type
  * Formats a template string with values
  */
+
 export type FormatFunction = (template: string, ...args: any[]) => string;

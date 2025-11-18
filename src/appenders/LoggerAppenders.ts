@@ -1,6 +1,6 @@
-import { ILoggerAppender } from '../interfaces/ILoggerAppender';
-import { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
-import { LogEvent } from '../types/LogEvent';
+import type { ILoggerAppender } from '../interfaces/ILoggerAppender';
+import type { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
+import type { LogEvent } from '../types/LogEvent';
 
 export class LoggerAppenders implements ILoggerAppenders {
     constructor(appenders: ILoggerAppender[] = []) {

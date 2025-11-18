@@ -1,6 +1,6 @@
-import { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
-import { ILoggerService } from '../interfaces/ILoggerService';
-import { LogLevel } from '../types/LogLevel';
+import type { ILoggerAppenders } from '../interfaces/ILoggerAppenders';
+import type { ILoggerService } from '../interfaces/ILoggerService';
+import type { LogLevel } from '../types/LogLevel';
 import { ALogger } from './ALogger';
 
 export class Logger extends ALogger {
@@ -8,7 +8,7 @@ export class Logger extends ALogger {
         context: string = 'default',
         service: ILoggerService,
         appenders: ILoggerAppenders,
-        logLevel?: LogLevel,
+        logLevel?: LogLevel
     ) {
         super(context, service, appenders, logLevel);
     }
