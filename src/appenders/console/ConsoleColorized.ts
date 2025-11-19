@@ -1,9 +1,8 @@
-import type { IConsoleColorized } from "../../interfaces/console/IConsoleColorized";
-import type { LogLevel } from "../../types/LogLevel";
-import { clc } from "./cli-colors.util";
+import type { IConsoleColorized } from '../../interfaces/console/IConsoleColorized';
+import type { LogLevel } from '../../types/LogLevel';
+import { clc } from './cli-colors.util';
 
 export class ConsoleColorized implements IConsoleColorized {
-
     colorize(message: string, logLevel: LogLevel): string {
         const color = this.colorByLevel(logLevel);
         return color(message);
@@ -39,5 +38,4 @@ export class ConsoleColorized implements IConsoleColorized {
                 return clc.trace;
         }
     }
-
 }

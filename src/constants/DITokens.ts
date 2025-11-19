@@ -1,7 +1,7 @@
-import { InjectionToken } from '../interfaces/di/InjectionToken';
 import type { IConsoleColorized } from '../interfaces/console/IConsoleColorized';
 import type { IConsoleFormatter } from '../interfaces/console/IConsoleFormatter';
 import type { IConsolePrinter } from '../interfaces/console/IConsolePrinter';
+import { InjectionToken } from '../interfaces/di/InjectionToken';
 import type { ITemplateProvider } from '../interfaces/ITemplateProvider';
 
 /**

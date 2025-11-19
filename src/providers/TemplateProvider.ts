@@ -1,4 +1,4 @@
-import type { ITemplateProvider } from "../interfaces/ITemplateProvider";
+import type { ITemplateProvider } from '../interfaces/ITemplateProvider';
 
 export class TemplateProvider implements ITemplateProvider {
     private template = '{date} {level} {context}: {message}\n';

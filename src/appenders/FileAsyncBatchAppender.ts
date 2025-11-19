@@ -3,8 +3,8 @@
  * Demonstrates batched file writing with retry logic
  */
 
-import { writeFile, appendFile, access } from 'node:fs/promises';
 import { constants } from 'node:fs';
+import { access, appendFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { LogEvent } from '../types/LogEvent';
 import { AAsyncBatchAppender, type BatchConfig } from './base/AAsyncBatchAppender';
@@ -65,7 +65,7 @@ export class FileAsyncBatchAppender extends AAsyncBatchAppender {
         }
 
         const lines = events.map(event => this.formatter(event));
-        const content = lines.join('\n') + '\n';
+        const content = `${lines.join('\n')}\n`;
 
         try {
             await appendFile(this.filePath, content, 'utf8');
@@ -77,10 +77,8 @@ export class FileAsyncBatchAppender extends AAsyncBatchAppender {
     /**
      * Default log formatter
      */
-    private defaultFormatter(event: LogEvent): string {
-        const timestamp = event.timestamp
-            ? new Date(event.timestamp).toISOString()
-            : new Date().toISOString();
+    protected defaultFormatter(event: LogEvent): string {
+        const timestamp = event.timestamp ? new Date(event.timestamp).toISOString() : new Date().toISOString();
         const level = event.level.toUpperCase().padStart(5);
         const context = event.context ? ` [${event.context}]` : '';
 

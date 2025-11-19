@@ -2,7 +2,10 @@
 type ColorTextFn = (text: string) => string;
 
 const isColorAllowed = (): boolean => !process.env.NO_COLOR;
-const colorIfAllowed = (colorFn: ColorTextFn): ColorTextFn => (text: string) => (isColorAllowed() ? colorFn(text) : text);
+const colorIfAllowed =
+    (colorFn: ColorTextFn): ColorTextFn =>
+    (text: string) =>
+        isColorAllowed() ? colorFn(text) : text;
 
 export const clc = {
     bold: colorIfAllowed((text: string) => `\x1B[1m${text}\x1B[0m`),
@@ -12,20 +15,16 @@ export const clc = {
     magentaBright: colorIfAllowed((text: string) => `\x1B[95m${text}\x1B[39m`),
     cyanBright: colorIfAllowed((text: string) => `\x1B[96m${text}\x1B[39m`),
 
-    fatal: colorIfAllowed(
-        (text: string) => `${colors.foreground.black}${colors.background.red}${text}${colors.reset}`
-    ),
+    fatal: colorIfAllowed((text: string) => `${colors.foreground.black}${colors.background.red}${text}${colors.reset}`),
     error: colorIfAllowed(
-        (text: string) =>
-            `${colors.blink}${colors.foreground.red}${text}${colors.reset}${colors.foreground.default}`
+        (text: string) => `${colors.blink}${colors.foreground.red}${text}${colors.reset}${colors.foreground.default}`
     ),
     httperror: colorIfAllowed(
         (text: string) =>
             `${colors.blink}${colors.foreground.lightRed}${text}${colors.reset}${colors.foreground.default}`
     ),
     warn: colorIfAllowed(
-        (text: string) =>
-            `${colors.blink}${colors.foreground.yellow}${text}${colors.reset}${colors.foreground.default}`
+        (text: string) => `${colors.blink}${colors.foreground.yellow}${text}${colors.reset}${colors.foreground.default}`
     ),
 
     info: colorIfAllowed((text: string) => `${colors.foreground.green}${text}${colors.foreground.default}`),

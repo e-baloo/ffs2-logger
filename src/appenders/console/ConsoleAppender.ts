@@ -1,18 +1,11 @@
+import { globalContainer } from '../../config/DIConfig';
+import { CONSOLE_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
 import type { IConsoleFormatter } from '../../interfaces/console/IConsoleFormatter';
 import type { IConsolePrinter } from '../../interfaces/console/IConsolePrinter';
 import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import type { ILoggerService } from '../../interfaces/ILoggerService';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
-import { globalContainer } from '../../config/DIConfig';
-import { CONSOLE_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
-
-
-
-
-
-
-
 
 export class ConsoleAppender implements ILoggerAppender {
     private level: LogLevel = 'silly';
@@ -53,9 +46,9 @@ export class ConsoleAppender implements ILoggerAppender {
         });
     }
 
-    initialize(): void { }
+    initialize(): void {}
 
-    destroy(): void { }
+    destroy(): void {}
 
     isInitialized(): boolean {
         return true;
@@ -68,11 +61,8 @@ export class ConsoleAppender implements ILoggerAppender {
     }
 
     protected printEvent(event: LogEvent, writeStreamType?: 'stdout' | 'stderr') {
-
         const [message, data, error] = this.formatter.formatEvent(event);
 
         this.printer.print(message, data, error, writeStreamType);
-
     }
-
 }

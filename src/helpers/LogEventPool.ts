@@ -79,7 +79,7 @@ export class LogEventPool {
                 delete this.error;
                 this.level = 'info';
                 this.timestamp = 0;
-            }
+            },
         };
 
         return event;

@@ -105,8 +105,7 @@ export class LazyFormatterRegistry {
         this.registerTransformers('log', () => ({
             timestamp: (d: Date = new Date()) => d.toISOString(),
             level: (level: string) => `[${level.toUpperCase().padEnd(5)}]`,
-            truncate: (s: string, maxLength = 100) =>
-                s.length > maxLength ? `${s.substring(0, maxLength)}...` : s,
+            truncate: (s: string, maxLength = 100) => (s.length > maxLength ? `${s.substring(0, maxLength)}...` : s),
         }));
     }
 

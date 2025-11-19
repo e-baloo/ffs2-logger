@@ -1,14 +1,14 @@
-import { DIContainer } from '../services/DIContainer';
 import { ConsoleColorized } from '../appenders/console/ConsoleColorized';
 import { ConsoleFormatter } from '../appenders/console/ConsoleFormatter';
 import { ConsolePrinter } from '../appenders/console/ConsolePrinter';
-import { TemplateProvider } from '../providers/TemplateProvider';
 import {
     CONSOLE_COLORIZED_TOKEN,
     CONSOLE_FORMATTER_TOKEN,
     CONSOLE_PRINTER_TOKEN,
-    TEMPLATE_PROVIDER_TOKEN
+    TEMPLATE_PROVIDER_TOKEN,
 } from '../constants/DITokens';
+import { TemplateProvider } from '../providers/TemplateProvider';
+import { DIContainer } from '../services/DIContainer';
 
 /**
  * Conteneur DI global pour l'application
@@ -25,31 +25,32 @@ export function configureDefaultContainer(): void {
     globalContainer.register({
         token: CONSOLE_COLORIZED_TOKEN,
         useFactory: () => new ConsoleColorized(),
-        singleton: true
+        singleton: true,
     });
 
     // Provider de template - Singleton
     globalContainer.register({
         token: TEMPLATE_PROVIDER_TOKEN,
         useFactory: () => new TemplateProvider(),
-        singleton: true
+        singleton: true,
     });
 
     // Service de formatage - Singleton (dépend de colorized et templateProvider)
     globalContainer.register({
         token: CONSOLE_FORMATTER_TOKEN,
-        useFactory: () => new ConsoleFormatter(
-            globalContainer.resolve(CONSOLE_COLORIZED_TOKEN),
-            globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN)
-        ),
-        singleton: true
+        useFactory: () =>
+            new ConsoleFormatter(
+                globalContainer.resolve(CONSOLE_COLORIZED_TOKEN),
+                globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN)
+            ),
+        singleton: true,
     });
 
     // Service d'impression - Singleton
     globalContainer.register({
         token: CONSOLE_PRINTER_TOKEN,
         useFactory: () => new ConsolePrinter(),
-        singleton: true
+        singleton: true,
     });
 }
 

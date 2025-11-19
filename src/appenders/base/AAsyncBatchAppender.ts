@@ -3,8 +3,8 @@
  * Groups log events and processes them in batches for better performance
  */
 
-import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import { logEventPool, type PoolableLogEvent } from '../../helpers/LogEventPool';
+import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
 
@@ -215,7 +215,7 @@ export abstract class AAsyncBatchAppender implements ILoggerAppender {
         }
 
         this.stats.retries++;
-        const delay = Math.min(1000 * Math.pow(2, attempt), 10000); // Max 10s delay
+        const delay = Math.min(1000 * 2 ** attempt, 10000); // Max 10s delay
 
         await new Promise(resolve => setTimeout(resolve, delay));
 
@@ -247,9 +247,8 @@ export abstract class AAsyncBatchAppender implements ILoggerAppender {
         if (this.stats.batchesFlushed === 1) {
             this.stats.avgBatchSize = batchSize;
         } else {
-            this.stats.avgBatchSize = (
-                (this.stats.avgBatchSize * (this.stats.batchesFlushed - 1)) + batchSize
-            ) / this.stats.batchesFlushed;
+            this.stats.avgBatchSize =
+                (this.stats.avgBatchSize * (this.stats.batchesFlushed - 1) + batchSize) / this.stats.batchesFlushed;
         }
     }
 

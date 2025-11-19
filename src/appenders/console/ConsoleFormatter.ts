@@ -1,25 +1,21 @@
-import { stringFormat } from "../../helpers/stringFormat/stringFormat";
-import type { IConsoleColorized } from "../../interfaces/console/IConsoleColorized";
-import type { IConsoleFormatter } from "../../interfaces/console/IConsoleFormatter";
-import type { ITemplateProvider } from "../../interfaces/ITemplateProvider";
-import type { LogEvent } from "../../types/LogEvent";
-import type { LogLevel } from "../../types/LogLevel";
-import { globalContainer } from "../../config/DIConfig";
-import { CONSOLE_COLORIZED_TOKEN, TEMPLATE_PROVIDER_TOKEN } from "../../constants/DITokens";
+import { globalContainer } from '../../config/DIConfig';
+import { CONSOLE_COLORIZED_TOKEN, TEMPLATE_PROVIDER_TOKEN } from '../../constants/DITokens';
+import { stringFormat } from '../../helpers/stringFormat/stringFormat';
+import type { IConsoleColorized } from '../../interfaces/console/IConsoleColorized';
+import type { IConsoleFormatter } from '../../interfaces/console/IConsoleFormatter';
+import type { ITemplateProvider } from '../../interfaces/ITemplateProvider';
+import type { LogEvent } from '../../types/LogEvent';
+import type { LogLevel } from '../../types/LogLevel';
 
 export class ConsoleFormatter implements IConsoleFormatter {
     private readonly colorizer: IConsoleColorized;
     private readonly templateProvider: ITemplateProvider;
 
-    constructor(
-        colorizer?: IConsoleColorized,
-        templateProvider?: ITemplateProvider
-    ) {
+    constructor(colorizer?: IConsoleColorized, templateProvider?: ITemplateProvider) {
         // Utilise le DI container si les dépendances ne sont pas fournies
         this.colorizer = colorizer ?? globalContainer.resolve(CONSOLE_COLORIZED_TOKEN);
         this.templateProvider = templateProvider ?? globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN);
     }
-
 
     formatEvent(event: LogEvent): [string, string | null, string | null] {
         const message = this.formattedTemplate({
@@ -47,7 +43,10 @@ export class ConsoleFormatter implements IConsoleFormatter {
     protected formatContext(event: LogEvent): string {
         const CONTEXT_LENGTH = 24;
         const context = (event.context ? event.context : '').substring(0, CONTEXT_LENGTH);
-        return this.colorizer.colorize(`[${' '.repeat(CONTEXT_LENGTH - context.length)}${context}]`, 'context' as LogLevel);
+        return this.colorizer.colorize(
+            `[${' '.repeat(CONTEXT_LENGTH - context.length)}${context}]`,
+            'context' as LogLevel
+        );
     }
 
     protected formatDate(event: LogEvent): string {
@@ -57,7 +56,6 @@ export class ConsoleFormatter implements IConsoleFormatter {
     protected formatMessage(event: LogEvent): string {
         return this.colorizer.colorize(`${event.message}`.trim(), event.level);
     }
-
 
     private formatError(event: LogEvent): string | null {
         if (!event.error) {
@@ -79,5 +77,4 @@ export class ConsoleFormatter implements IConsoleFormatter {
         }
         return this.colorizer.colorize(`${JSON.stringify(event.data, null, 2)}\n`, 'data');
     }
-
 }
