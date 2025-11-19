@@ -6,18 +6,14 @@ import type { IConsoleFormatter } from '../../interfaces/console/IConsoleFormatt
 import type { ITemplateProvider } from '../../interfaces/ITemplateProvider';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
-import { IEmojiFormatter } from '../EmojiFormatter';
+import type { IEmojiFormatter } from '../EmojiFormatter';
 
 export class ConsoleFormatter implements IConsoleFormatter {
     private readonly colorizer: IConsoleColorized;
     private readonly template: ITemplateProvider;
     private readonly emoji: IEmojiFormatter;
 
-    constructor(
-        colorizer?: IConsoleColorized,
-        template?: ITemplateProvider,
-        emoji?: IEmojiFormatter
-    ) {
+    constructor(colorizer?: IConsoleColorized, template?: ITemplateProvider, emoji?: IEmojiFormatter) {
         this.colorizer = colorizer ?? globalContainer.resolve(CONSOLE_COLORIZED_TOKEN);
         this.template = template ?? globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN);
         this.emoji = emoji ?? globalContainer.resolve(EMOJI_FORMATTER_TOKEN);
@@ -47,7 +43,13 @@ export class ConsoleFormatter implements IConsoleFormatter {
         return [message, data, error];
     }
 
-    private formattedTemplate(data: { date: string; level: string; context: string; message: string, emoji?: string }): string {
+    private formattedTemplate(data: {
+        date: string;
+        level: string;
+        context: string;
+        message: string;
+        emoji?: string;
+    }): string {
         return stringFormat(this.template.getTemplate(), data);
     }
 

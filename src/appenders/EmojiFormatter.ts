@@ -1,5 +1,4 @@
-import { LogEvent } from "../types/LogEvent";
-
+import type { LogEvent } from '../types/LogEvent';
 
 const isEmojiAllowed = (): boolean => !process.env.NO_EMOJI;
 
@@ -8,9 +7,7 @@ export interface IEmojiFormatter {
 }
 
 export class EmojiFormatter implements IEmojiFormatter {
-
     formatEmoji(event: LogEvent): string {
-
         if (!isEmojiAllowed()) {
             return '';
         }

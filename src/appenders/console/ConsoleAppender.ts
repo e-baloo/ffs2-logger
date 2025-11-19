@@ -1,4 +1,4 @@
-import { IDIContainer } from '../..';
+import type { IDIContainer } from '../..';
 import { globalContainer } from '../../config/DIConfig';
 import { CONSOLE_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
 import type { IConsoleFormatter } from '../../interfaces/console/IConsoleFormatter';
@@ -12,7 +12,6 @@ export class ConsoleAppender implements ILoggerAppender {
     private level: LogLevel = 'silly';
     private readonly formatter: IConsoleFormatter;
     private readonly printer: IConsolePrinter;
-
 
     constructor(
         private readonly service: ILoggerService,
@@ -49,9 +48,9 @@ export class ConsoleAppender implements ILoggerAppender {
         });
     }
 
-    initialize(): void { }
+    initialize(): void {}
 
-    destroy(): void { }
+    destroy(): void {}
 
     isInitialized(): boolean {
         return true;

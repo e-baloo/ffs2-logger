@@ -1,13 +1,13 @@
-import type { IDIContainer } from '../../interfaces/di/IDIContainer';
 import { globalContainer } from '../../config/DIConfig';
+import { CONSOLE_JSON_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
+import type { IConsoleJsonFormatter } from '../../interfaces/console/IConsoleJsonFormatter';
 import type { IConsolePrinter } from '../../interfaces/console/IConsolePrinter';
+import type { IDIContainer } from '../../interfaces/di/IDIContainer';
+import type { ICompact } from '../../interfaces/ICompact';
 import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import type { ILoggerService } from '../../interfaces/ILoggerService';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
-import { CONSOLE_JSON_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
-import type { IConsoleJsonFormatter } from '../../interfaces/console/IConsoleJsonFormatter';
-import type { ICompact } from '../../interfaces/ICompact';
 
 /**
  * Appender console avec formatage JSON
@@ -23,9 +23,9 @@ export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
         formatter?: IConsoleJsonFormatter,
         printer?: IConsolePrinter,
         container: IDIContainer = globalContainer,
-        compact = false,
+        compact = false
     ) {
-        this.formatter = formatter ?? container.resolve(CONSOLE_JSON_FORMATTER_TOKEN)
+        this.formatter = formatter ?? container.resolve(CONSOLE_JSON_FORMATTER_TOKEN);
         this.printer = printer ?? container.resolve(CONSOLE_PRINTER_TOKEN);
 
         this.formatter.setCompact(compact);
@@ -61,9 +61,9 @@ export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
         });
     }
 
-    initialize(): void { }
+    initialize(): void {}
 
-    destroy(): void { }
+    destroy(): void {}
 
     isInitialized(): boolean {
         return true;

@@ -1,10 +1,10 @@
+import type { IEmojiFormatter } from '../appenders/EmojiFormatter';
 import type { IConsoleColorized } from '../interfaces/console/IConsoleColorized';
 import type { IConsoleFormatter } from '../interfaces/console/IConsoleFormatter';
-import { IConsoleJsonFormatter } from '../interfaces/console/IConsoleJsonFormatter';
+import type { IConsoleJsonFormatter } from '../interfaces/console/IConsoleJsonFormatter';
 import type { IConsolePrinter } from '../interfaces/console/IConsolePrinter';
 import { InjectionToken } from '../interfaces/di/InjectionToken';
 import type { ITemplateProvider } from '../interfaces/ITemplateProvider';
-import type { IEmojiFormatter } from '../appenders/EmojiFormatter';
 
 /**
  * Tokens d'injection pour les dépendances de ConsoleAppender

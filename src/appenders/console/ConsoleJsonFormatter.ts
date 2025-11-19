@@ -8,9 +8,7 @@ import type { LogEvent } from '../../types/LogEvent';
 export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
     private compact: boolean;
 
-    constructor(
-        compact = false
-    ) {
+    constructor(compact = false) {
         this.compact = compact;
     }
 
@@ -18,8 +16,7 @@ export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
         return '';
     }
 
-    setTemplate(_template: string): void {
-    }
+    setTemplate(_template: string): void {}
 
     setCompact(compact: boolean): void {
         this.compact = compact;
@@ -56,10 +53,7 @@ export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
         }
 
         // Formater en JSON
-        const jsonString = this.compact
-            ? JSON.stringify(jsonData)
-            : JSON.stringify(jsonData, null, 2);
-
+        const jsonString = this.compact ? JSON.stringify(jsonData) : JSON.stringify(jsonData, null, 2);
 
         return [jsonString, null, null];
     }
