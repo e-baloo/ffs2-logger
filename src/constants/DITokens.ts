@@ -1,8 +1,10 @@
 import type { IConsoleColorized } from '../interfaces/console/IConsoleColorized';
 import type { IConsoleFormatter } from '../interfaces/console/IConsoleFormatter';
+import { IConsoleJsonFormatter } from '../interfaces/console/IConsoleJsonFormatter';
 import type { IConsolePrinter } from '../interfaces/console/IConsolePrinter';
 import { InjectionToken } from '../interfaces/di/InjectionToken';
 import type { ITemplateProvider } from '../interfaces/ITemplateProvider';
+import type { IEmojiFormatter } from '../appenders/EmojiFormatter';
 
 /**
  * Tokens d'injection pour les dépendances de ConsoleAppender
@@ -20,6 +22,11 @@ export const CONSOLE_COLORIZED_TOKEN = new InjectionToken<IConsoleColorized>('IC
 export const CONSOLE_FORMATTER_TOKEN = new InjectionToken<IConsoleFormatter>('IConsoleFormatter');
 
 /**
+ * Token pour le formatter JSON de console
+ */
+export const CONSOLE_JSON_FORMATTER_TOKEN = new InjectionToken<IConsoleJsonFormatter>('IConsoleJsonFormatter');
+
+/**
  * Token pour le service d'impression console
  */
 export const CONSOLE_PRINTER_TOKEN = new InjectionToken<IConsolePrinter>('IConsolePrinter');
@@ -28,3 +35,8 @@ export const CONSOLE_PRINTER_TOKEN = new InjectionToken<IConsolePrinter>('IConso
  * Token pour le provider de template
  */
 export const TEMPLATE_PROVIDER_TOKEN = new InjectionToken<ITemplateProvider>('ITemplateProvider');
+
+/**
+ * Token pour le formatter d'emoji
+ */
+export const EMOJI_FORMATTER_TOKEN = new InjectionToken<IEmojiFormatter>('IEmojiFormatter');

@@ -1,28 +1,34 @@
-import { IDIContainer } from '../..';
+import type { IDIContainer } from '../../interfaces/di/IDIContainer';
 import { globalContainer } from '../../config/DIConfig';
-import { CONSOLE_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
-import type { IConsoleFormatter } from '../../interfaces/console/IConsoleFormatter';
 import type { IConsolePrinter } from '../../interfaces/console/IConsolePrinter';
 import type { ILoggerAppender } from '../../interfaces/ILoggerAppender';
 import type { ILoggerService } from '../../interfaces/ILoggerService';
 import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
+import { CONSOLE_JSON_FORMATTER_TOKEN, CONSOLE_PRINTER_TOKEN } from '../../constants/DITokens';
+import type { IConsoleJsonFormatter } from '../../interfaces/console/IConsoleJsonFormatter';
+import type { ICompact } from '../../interfaces/ICompact';
 
-export class ConsoleAppender implements ILoggerAppender {
+/**
+ * Appender console avec formatage JSON
+ * Hérite de ConsoleAppender mais utilise un formatter JSON par défaut
+ */
+export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
     private level: LogLevel = 'silly';
-    private readonly formatter: IConsoleFormatter;
+    private readonly formatter: IConsoleJsonFormatter;
     private readonly printer: IConsolePrinter;
-
 
     constructor(
         private readonly service: ILoggerService,
-        formatter?: IConsoleFormatter,
+        formatter?: IConsoleJsonFormatter,
         printer?: IConsolePrinter,
-        container: IDIContainer = globalContainer
+        container: IDIContainer = globalContainer,
+        compact = false,
     ) {
-        // Utilise le DI container si les dépendances ne sont pas fournies
-        this.formatter = formatter ?? container.resolve(CONSOLE_FORMATTER_TOKEN);
+        this.formatter = formatter ?? container.resolve(CONSOLE_JSON_FORMATTER_TOKEN)
         this.printer = printer ?? container.resolve(CONSOLE_PRINTER_TOKEN);
+
+        this.formatter.setCompact(compact);
     }
 
     getLogLevel(): LogLevel {
@@ -33,7 +39,13 @@ export class ConsoleAppender implements ILoggerAppender {
         this.level = level;
     }
 
-    // private template = '{date} {level}{context}: {message}\n';
+    getCompact(): boolean {
+        return this.formatter.getCompact();
+    }
+
+    setCompact(compact: boolean): void {
+        this.formatter.setCompact(compact);
+    }
 
     async append(events: LogEvent | LogEvent[]): Promise<void> {
         if (!Array.isArray(events)) {
@@ -57,7 +69,7 @@ export class ConsoleAppender implements ILoggerAppender {
         return true;
     }
 
-    private readonly symbolIdentifier: symbol = Symbol.for('Appender:ConsoleAppender');
+    private readonly symbolIdentifier: symbol = Symbol.for('Appender:ConsoleJsonAppender');
 
     getSymbolIdentifier(): symbol {
         return this.symbolIdentifier;
@@ -66,6 +78,6 @@ export class ConsoleAppender implements ILoggerAppender {
     protected printEvent(event: LogEvent, writeStreamType?: 'stdout' | 'stderr') {
         const [message, data, error] = this.formatter.formatEvent(event);
 
-        this.printer.print(message, data, error, writeStreamType);
+        this.printer.print(`${message}\n`, data, error, writeStreamType);
     }
 }

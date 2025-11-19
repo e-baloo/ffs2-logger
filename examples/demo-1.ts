@@ -1,6 +1,6 @@
-import { LOGGER_SERVICE } from '..';
-import { ConsoleAppender } from '../appenders/console/ConsoleAppender';
-import { LOG_LEVEL } from '../types/LogLevel';
+import { LOGGER_SERVICE } from '../src';
+import { ConsoleAppender } from '../src/appenders/console/ConsoleAppender';
+import { LOG_LEVEL } from '../src/types/LogLevel';
 
 const LOGGER = LOGGER_SERVICE.createLogger('Logger', { logLevel: 'silly' });
 
@@ -59,3 +59,9 @@ LOG_LEVEL.forEach(level => {
         context: 'AfterAppenderChange',
     });
 });
+
+
+
+LOGGER.fatal(new Error('Final test error'));
+
+LOGGER.trace({ foo: 'bar', age: 42, active: true });

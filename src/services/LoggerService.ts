@@ -71,6 +71,10 @@ export class LoggerService implements ILoggerService, ILogLevel {
         this.appenders.removeAppender(appender);
     }
 
+    clearAppenders(): void {
+        this.appenders.clearAppenders();
+    }
+
     listAppenders(): symbol[] {
         return this.appenders.listAppenders();
     }

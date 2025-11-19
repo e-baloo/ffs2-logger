@@ -1,10 +1,14 @@
 import { ConsoleColorized } from '../appenders/console/ConsoleColorized';
 import { ConsoleFormatter } from '../appenders/console/ConsoleFormatter';
+import { ConsoleJsonFormatter } from '../appenders/console/ConsoleJsonFormatter';
 import { ConsolePrinter } from '../appenders/console/ConsolePrinter';
+import { EmojiFormatter } from '../appenders/EmojiFormatter';
 import {
     CONSOLE_COLORIZED_TOKEN,
     CONSOLE_FORMATTER_TOKEN,
+    CONSOLE_JSON_FORMATTER_TOKEN,
     CONSOLE_PRINTER_TOKEN,
+    EMOJI_FORMATTER_TOKEN,
     TEMPLATE_PROVIDER_TOKEN,
 } from '../constants/DITokens';
 import { TemplateProvider } from '../providers/TemplateProvider';
@@ -43,6 +47,20 @@ export function configureDefaultContainer(): void {
                 globalContainer.resolve(CONSOLE_COLORIZED_TOKEN),
                 globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN)
             ),
+        singleton: true,
+    });
+
+    // Service de formatage JSON - Singleton
+    globalContainer.register({
+        token: CONSOLE_JSON_FORMATTER_TOKEN,
+        useFactory: () => new ConsoleJsonFormatter(),
+        singleton: true,
+    });
+
+    // Service de formatage emoji - Singleton
+    globalContainer.register({
+        token: EMOJI_FORMATTER_TOKEN,
+        useFactory: () => new EmojiFormatter(),
         singleton: true,
     });
 
