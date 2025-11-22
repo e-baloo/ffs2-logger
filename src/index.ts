@@ -25,6 +25,8 @@ export * from './types/LogLevel';
 // Wreapper instances for easy usage
 export * from './wrappers/NestJSLoggerWrapper';
 export * from './wrappers/ConsoleWrapper';
+// Frame title helper exports
+export * from './helpers/frameTitle';
 
 
 // create default logger service and console appender instances
