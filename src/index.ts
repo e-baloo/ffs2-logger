@@ -24,6 +24,7 @@ export * from './services/DIContainer';
 export * from './types/LogLevel';
 // Wreapper instances for easy usage
 export * from './wrappers/NestJSLoggerWrapper';
+export * from './wrappers/ConsoleWrapper';
 
 
 // create default logger service and console appender instances
