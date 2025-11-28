@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from '@jest/globals';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { LOG_PRIORITY, type LogLevel } from '../types/LogLevel';
 import { LogLevelProvider } from './LogLevelProvider';
 

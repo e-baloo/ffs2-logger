@@ -1,6 +1,9 @@
 {
   "name": "FFS2 Logger Development",
-  "image": "node:22-bookworm",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
 
   "customizations": {
     "vscode": {
@@ -25,21 +28,19 @@
   },
 
   "containerEnv": {
-    "HTTP_PROXY": "${localEnv:HTTP_PROXY:http://host.docker.internal:9000}",
-    "HTTPS_PROXY": "${localEnv:HTTPS_PROXY:http://host.docker.internal:9000}",
-    "NO_PROXY": "${localEnv:NO_PROXY:localhost,127.0.0.1,host.docker.internal}",
-    "http_proxy": "${localEnv:HTTP_PROXY:http://host.docker.internal:9000}",
-    "https_proxy": "${localEnv:HTTPS_PROXY:http://host.docker.internal:9000}",
-    "no_proxy": "${localEnv:NO_PROXY:localhost,127.0.0.1,host.docker.internal}"
+    "HTTP_PROXY": "http://host.docker.internal:9000",
+    "HTTPS_PROXY": "http://host.docker.internal:9000",
+    "NO_PROXY": "localhost,127.0.0.1,host.docker.internal",
+    "http_proxy": "http://host.docker.internal:9000",
+    "https_proxy": "http://host.docker.internal:9000",
+    "no_proxy": "localhost,127.0.0.1,host.docker.internal"
   },
 
   "remoteEnv": {
-    "HTTP_PROXY": "${localEnv:HTTP_PROXY:http://host.docker.internal:9000}",
-    "HTTPS_PROXY": "${localEnv:HTTPS_PROXY:http://host.docker.internal:9000}",
-    "NO_PROXY": "${localEnv:NO_PROXY:localhost,127.0.0.1,host.docker.internal}"
+    "NODE_TLS_REJECT_UNAUTHORIZED": "0"
   },
 
-  "postCreateCommand": "apt-get update && apt-get install -y git && corepack enable && pnpm install",
+  "postCreateCommand": "pnpm install",
 
   "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
 

@@ -27,12 +27,12 @@ export class ConsoleWrapper {
      * @param context - Contexte optionnel pour tous les logs console (par défaut: 'Console')
      */
     static wrap(logger: ILogger, context: string = 'Console'): void {
-        if (this.isWrapped) {
+        if (ConsoleWrapper.isWrapped) {
             return;
         }
 
         // Sauvegarde des méthodes originales
-        this.originalMethods = {
+        ConsoleWrapper.originalMethods = {
             log: console.log,
             info: console.info,
             warn: console.warn,
@@ -42,6 +42,7 @@ export class ConsoleWrapper {
         };
 
         // Override console.log
+        // biome-ignore lint/suspicious/noExplicitAny: Console args are naturally any
         console.log = (...args: any[]): void => {
             const data = args.slice(1);
             logger.log({ message: args[0], context, data: data.length > 0 ? data : undefined });
@@ -82,39 +83,39 @@ export class ConsoleWrapper {
             logger.trace({ message: args[0], context, error, data: args.slice(1) });
         };
 
-        this.isWrapped = true;
+        ConsoleWrapper.isWrapped = true;
     }
 
     /**
      * Désactive l'interception de la console et restaure les méthodes originales
      */
     static unwrap(): void {
-        if (!this.isWrapped || !this.originalMethods) {
+        if (!ConsoleWrapper.isWrapped || !ConsoleWrapper.originalMethods) {
             return;
         }
 
-        console.log = this.originalMethods.log;
-        console.info = this.originalMethods.info;
-        console.warn = this.originalMethods.warn;
-        console.error = this.originalMethods.error;
-        console.debug = this.originalMethods.debug;
-        console.trace = this.originalMethods.trace;
+        console.log = ConsoleWrapper.originalMethods.log;
+        console.info = ConsoleWrapper.originalMethods.info;
+        console.warn = ConsoleWrapper.originalMethods.warn;
+        console.error = ConsoleWrapper.originalMethods.error;
+        console.debug = ConsoleWrapper.originalMethods.debug;
+        console.trace = ConsoleWrapper.originalMethods.trace;
 
-        this.originalMethods = null;
-        this.isWrapped = false;
+        ConsoleWrapper.originalMethods = null;
+        ConsoleWrapper.isWrapped = false;
     }
 
     /**
      * Vérifie si la console est actuellement wrappée
      */
     static isConsoleWrapped(): boolean {
-        return this.isWrapped;
+        return ConsoleWrapper.isWrapped;
     }
 
     /**
      * Accède aux méthodes console originales (utile pour le debug du logger lui-même)
      */
     static getOriginalConsole(): OriginalConsoleMethods | null {
-        return this.originalMethods;
+        return ConsoleWrapper.originalMethods;
     }
 }

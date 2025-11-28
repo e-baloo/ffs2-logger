@@ -5,6 +5,7 @@ import type { LogMessage } from '../types/LogMessage';
  * Interface LoggerService de NestJS
  * Réplique l'interface officielle pour éviter la dépendance à @nestjs/common
  */
+// biome-ignore lint/suspicious/noExplicitAny: Interface NestJS compatible
 export interface LoggerService {
     log(message: any, ...optionalParams: any[]): any;
     error(message: any, ...optionalParams: any[]): any;
@@ -26,7 +27,7 @@ export class NestJSLoggerWrapper implements LoggerService {
     constructor(
         private readonly logger: ILogger,
         private context?: string
-    ) { }
+    ) {}
 
     /**
      * Définit ou modifie le contexte du logger
@@ -64,7 +65,7 @@ export class NestJSLoggerWrapper implements LoggerService {
         if (trace) {
             this.logger.error({
                 message: formattedMessage,
-                error: new Error(trace)
+                error: new Error(trace),
             });
         } else {
             this.logger.error(formattedMessage);
@@ -129,7 +130,7 @@ export class NestJSLoggerWrapper implements LoggerService {
         if (typeof message === 'object' && message !== null) {
             return {
                 ...message,
-                context: finalContext
+                context: finalContext,
             };
         }
 

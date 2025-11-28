@@ -26,29 +26,16 @@ Le Dev Container supporte automatiquement les proxys HTTP/HTTPS.
 
 ### Variables d'environnement
 
-Les variables suivantes sont configurées automatiquement :
-- `HTTP_PROXY` (défaut: `http://host.docker.internal:9000`)
-- `HTTPS_PROXY` (défaut: `http://host.docker.internal:9000`)
-- `NO_PROXY` (défaut: `localhost,127.0.0.1,host.docker.internal`)
+Les variables suivantes sont configurées pour pointer vers l'hôte :
+- `HTTP_PROXY`: `http://host.docker.internal:9000`
+- `HTTPS_PROXY`: `http://host.docker.internal:9000`
+- `NO_PROXY`: `localhost,127.0.0.1,host.docker.internal`
 
-**Important** : Le container Docker ne peut pas accéder à `127.0.0.1` ou `localhost` de l'hôte. 
-Il faut utiliser `host.docker.internal` pour référencer la machine hôte.
+**Note** : La configuration ignore volontairement vos variables d'environnement locales (qui contiennent souvent `127.0.0.1`) pour forcer l'utilisation de `host.docker.internal`, seul moyen pour le conteneur d'atteindre le proxy sur l'hôte.
 
 ### Personnalisation
 
-Pour modifier les valeurs par défaut, définissez les variables sur votre machine hôte :
-
-**Windows (PowerShell)** :
-```powershell
-$env:HTTP_PROXY = "http://host.docker.internal:8080"
-$env:HTTPS_PROXY = "http://host.docker.internal:8080"
-```
-
-**Linux/macOS (Bash)** :
-```bash
-export HTTP_PROXY=http://host.docker.internal:8080
-export HTTPS_PROXY=http://host.docker.internal:8080
-```
+Pour modifier le port ou l'adresse du proxy, vous devez éditer directement le fichier `.devcontainer/devcontainer.json`.
 
 ### Configuration `.npmrc`
 

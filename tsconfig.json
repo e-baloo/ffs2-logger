@@ -25,7 +25,7 @@
         "jsx": "react-jsx",
         "lib": ["ES6", "DOM", "ESNext"],
         "module": "es2022",
-        "types": ["node", "jest"],
+        "types": ["node", "vitest/globals"],
         "outDir": "./dist",
         "rootDir": "./src",
     },
