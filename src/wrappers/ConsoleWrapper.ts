@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: wrapper form console */
+/** biome-ignore-all lint/suspicious/noExplicitAny: compatibility with console */
 import type { ILogger } from '../interfaces/ILogger';
 
 /**
@@ -42,7 +44,6 @@ export class ConsoleWrapper {
         };
 
         // Override console.log
-        // biome-ignore lint/suspicious/noExplicitAny: Console args are naturally any
         console.log = (...args: any[]): void => {
             const data = args.slice(1);
             logger.log({ message: args[0], context, data: data.length > 0 ? data : undefined });

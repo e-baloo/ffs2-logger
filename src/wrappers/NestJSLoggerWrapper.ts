@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: compatibility with NestJS */
 import type { ILogger } from '../interfaces/ILogger';
 import type { LogMessage } from '../types/LogMessage';
 
@@ -5,7 +6,6 @@ import type { LogMessage } from '../types/LogMessage';
  * Interface LoggerService de NestJS
  * Réplique l'interface officielle pour éviter la dépendance à @nestjs/common
  */
-// biome-ignore lint/suspicious/noExplicitAny: Interface NestJS compatible
 export interface LoggerService {
     log(message: any, ...optionalParams: any[]): any;
     error(message: any, ...optionalParams: any[]): any;
