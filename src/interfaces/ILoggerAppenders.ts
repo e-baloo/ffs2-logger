@@ -5,5 +5,6 @@ export interface ILoggerAppenders {
     append(message: LogEvent | LogEvent[]): Promise<void>;
     addAppender(appender: ILoggerAppender): void;
     removeAppender(appender: ILoggerAppender): void;
+    clearAppenders(): void;
     listAppenders(): symbol[];
 }

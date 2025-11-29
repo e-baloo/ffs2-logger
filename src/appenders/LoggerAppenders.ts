@@ -34,4 +34,8 @@ export class LoggerAppenders implements ILoggerAppenders {
     removeAppender(appender: ILoggerAppender): void {
         this.appenders.delete(appender.getSymbolIdentifier());
     }
+
+    clearAppenders(): void {
+        this.appenders.clear();
+    }
 }

@@ -4,7 +4,7 @@
  * Tests for string-format
  */
 
-import { describe, expect, it } from '@jest/globals';
+import { describe, expect, it } from 'vitest';
 import { create, stringFormat } from './stringFormat';
 import { ValueError } from './ValueError';
 
