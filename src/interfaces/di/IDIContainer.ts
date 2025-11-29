@@ -1,64 +1,64 @@
 import type { Token } from './InjectionToken';
 
 /**
- * Factory function pour créer une instance de service
+ * Factory function to create a service instance
  */
 export type Factory<T> = () => T;
 
 /**
- * Configuration d'un provider de service
+ * Service provider configuration
  */
 export interface Provider<T> {
     /**
-     * Token d'identification du service
+     * Service identification token
      */
     token: Token<T>;
 
     /**
-     * Factory pour créer l'instance du service
+     * Factory to create the service instance
      */
     useFactory: Factory<T>;
 
     /**
-     * Si true, une seule instance sera créée et réutilisée (singleton)
-     * Si false, une nouvelle instance sera créée à chaque résolution
+     * If true, a single instance will be created and reused (singleton)
+     * If false, a new instance will be created on each resolution
      */
     singleton?: boolean;
 }
 
 /**
- * Interface du conteneur d'injection de dépendances
+ * Dependency Injection Container Interface
  */
 export interface IDIContainer {
     /**
-     * Enregistre un provider dans le conteneur
-     * @param provider - Configuration du provider à enregistrer
+     * Registers a provider in the container
+     * @param provider - Provider configuration to register
      */
     register<T>(provider: Provider<T>): void;
 
     /**
-     * Résout une dépendance depuis le conteneur
-     * @param token - Token d'identification du service
-     * @returns L'instance du service
-     * @throws Error si le service n'est pas enregistré
+     * Resolves a dependency from the container
+     * @param token - Service identification token
+     * @returns The service instance
+     * @throws Error if the service is not registered
      */
     resolve<T>(token: Token<T>): T;
 
     /**
-     * Vérifie si un service est enregistré
-     * @param token - Token d'identification du service
-     * @returns true si le service est enregistré
+     * Checks if a service is registered
+     * @param token - Service identification token
+     * @returns true if the service is registered
      */
     has<T>(token: Token<T>): boolean;
 
     /**
-     * Supprime un service du conteneur
-     * @param token - Token d'identification du service
+     * Removes a service from the container
+     * @param token - Service identification token
      */
     unregister<T>(token: Token<T>): void;
 
     /**
-     * Réinitialise le conteneur (supprime tous les services)
+     * Resets the container (removes all services)
      */
     clear(): void;
 }

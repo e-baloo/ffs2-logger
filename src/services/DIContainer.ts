@@ -2,31 +2,31 @@ import type { IDIContainer, Provider } from '../interfaces/di/IDIContainer';
 import type { Token } from '../interfaces/di/InjectionToken';
 
 /**
- * Implémentation simple et efficace d'un conteneur d'injection de dépendances
- * Supporte les singletons et les factories transientes
+ * Simple and efficient implementation of a Dependency Injection Container
+ * Supports singletons and transient factories
  */
 export class DIContainer implements IDIContainer {
     /**
-     * Map stockant les providers enregistrés
+     * Map storing registered providers
      */
     private readonly providers = new Map<Token<unknown>, Provider<unknown>>();
 
     /**
-     * Cache des instances singleton
+     * Cache for singleton instances
      */
     private readonly singletons = new Map<Token<unknown>, unknown>();
 
     /**
-     * Enregistre un provider dans le conteneur
+     * Registers a provider in the container
      */
     register<T>(provider: Provider<T>): void {
         this.providers.set(provider.token, provider);
     }
 
     /**
-     * Résout une dépendance depuis le conteneur
-     * Pour les singletons, retourne toujours la même instance
-     * Pour les transients, crée une nouvelle instance à chaque appel
+     * Resolves a dependency from the container
+     * For singletons, always returns the same instance
+     * For transients, creates a new instance on each call
      */
     resolve<T>(token: Token<T>): T {
         const provider = this.providers.get(token) as Provider<T> | undefined;
@@ -35,32 +35,32 @@ export class DIContainer implements IDIContainer {
             throw new Error(`No provider found for token: ${this.tokenToString(token)}`);
         }
 
-        // Si c'est un singleton et qu'il existe déjà, le retourner
+        // If it's a singleton and already exists, return it
         if (provider.singleton) {
             const cached = this.singletons.get(token) as T | undefined;
             if (cached !== undefined) {
                 return cached;
             }
 
-            // Créer et mettre en cache le singleton
+            // Create and cache the singleton
             const instance = provider.useFactory();
             this.singletons.set(token, instance);
             return instance;
         }
 
-        // Pour les transients, créer une nouvelle instance à chaque fois
+        // For transients, create a new instance every time
         return provider.useFactory();
     }
 
     /**
-     * Vérifie si un service est enregistré
+     * Checks if a service is registered
      */
     has<T>(token: Token<T>): boolean {
         return this.providers.has(token);
     }
 
     /**
-     * Supprime un service du conteneur
+     * Removes a service from the container
      */
     unregister<T>(token: Token<T>): void {
         this.providers.delete(token);
@@ -68,7 +68,7 @@ export class DIContainer implements IDIContainer {
     }
 
     /**
-     * Réinitialise complètement le conteneur
+     * Completely resets the container
      */
     clear(): void {
         this.providers.clear();
@@ -76,7 +76,7 @@ export class DIContainer implements IDIContainer {
     }
 
     /**
-     * Convertit un token en chaîne lisible pour les messages d'erreur
+     * Converts a token to a readable string for error messages
      */
     private tokenToString(token: Token<unknown>): string {
         if (typeof token === 'string') {

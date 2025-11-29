@@ -19,7 +19,7 @@ export class ConsoleAppender implements ILoggerAppender {
         printer?: IConsolePrinter,
         container: IDIContainer = globalContainer
     ) {
-        // Utilise le DI container si les dépendances ne sont pas fournies
+        // Use DI container if dependencies are not provided
         this.formatter = formatter ?? container.resolve(CONSOLE_FORMATTER_TOKEN);
         this.printer = printer ?? container.resolve(CONSOLE_PRINTER_TOKEN);
     }

@@ -1,127 +1,127 @@
-# Dev Container pour FFS2 Logger
+# Dev Container for FFS2 Logger
 
-Ce projet utilise un Dev Container pour fournir un environnement de développement cohérent.
+This project uses a Dev Container to provide a consistent development environment.
 
-## 🚀 Démarrage rapide
+## 🚀 Quick Start
 
-1. **Installer les prérequis** :
+1. **Install Prerequisites**:
    - [Docker Desktop](https://www.docker.com/products/docker-desktop)
    - [VS Code](https://code.visualstudio.com/)
-   - Extension VS Code : [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   - VS Code Extension: [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-2. **Ouvrir dans le container** :
-   - Ouvrir VS Code dans le dossier du projet
-   - Appuyer sur `F1` et sélectionner : `Dev Containers: Reopen in Container`
-   - Ou cliquer sur l'icône `><` en bas à gauche et choisir "Reopen in Container"
+2. **Open in Container**:
+   - Open VS Code in the project folder
+   - Press `F1` and select: `Dev Containers: Reopen in Container`
+   - Or click the `><` icon at the bottom left and choose "Reopen in Container"
 
-3. **Première utilisation** :
-   Le container va :
-   - Télécharger l'image Node.js 20
-   - Installer les dépendances avec `pnpm install`
-   - Configurer Git
+3. **First Use**:
+   The container will:
+   - Download the Node.js 20 image
+   - Install dependencies with `pnpm install`
+   - Configure Git
 
-## 🔧 Configuration Proxy
+## 🔧 Proxy Configuration
 
-Le Dev Container supporte automatiquement les proxys HTTP/HTTPS.
+The Dev Container automatically supports HTTP/HTTPS proxies.
 
-### Variables d'environnement
+### Environment Variables
 
-Les variables suivantes sont configurées pour pointer vers l'hôte :
+The following variables are configured to point to the host:
 - `HTTP_PROXY`: `http://host.docker.internal:9000`
 - `HTTPS_PROXY`: `http://host.docker.internal:9000`
 - `NO_PROXY`: `localhost,127.0.0.1,host.docker.internal`
 
-**Note** : La configuration ignore volontairement vos variables d'environnement locales (qui contiennent souvent `127.0.0.1`) pour forcer l'utilisation de `host.docker.internal`, seul moyen pour le conteneur d'atteindre le proxy sur l'hôte.
+**Note**: The configuration intentionally ignores your local environment variables (which often contain `127.0.0.1`) to force the use of `host.docker.internal`, the only way for the container to reach the proxy on the host.
 
-### Personnalisation
+### Customization
 
-Pour modifier le port ou l'adresse du proxy, vous devez éditer directement le fichier `.devcontainer/devcontainer.json`.
+To modify the proxy port or address, you must directly edit the `.devcontainer/devcontainer.json` file.
 
-### Configuration `.npmrc`
+### `.npmrc` Configuration
 
-Si nécessaire, ajoutez dans `.npmrc` :
+If necessary, add to `.npmrc`:
 ```
 proxy=http://host.docker.internal:9000
 https-proxy=http://host.docker.internal:9000
 ```
 
-## 📦 Image de base
+## 📦 Base Image
 
-- **Image** : `node:22-bookworm`
-- **Node.js** : Version 22 LTS (officielle)
-- **Système** : Debian Bookworm
-- **Package Manager** : pnpm (via corepack)
-- **Git** : Installé automatiquement
+- **Image**: `node:22-bookworm`
+- **Node.js**: Version 22 LTS (official)
+- **System**: Debian Bookworm
+- **Package Manager**: pnpm (via corepack)
+- **Git**: Automatically installed
 
-## 🛠️ Fonctionnalités
+## 🛠️ Features
 
-### Extensions VS Code installées
-- **Biome** - Linter et formatter
-- **ESLint** - Support ESLint
-- **TypeScript** - Support TypeScript avancé
-- **Jest** - Runner de tests intégré
-- **Code Spell Checker** - Vérification orthographique
+### Installed VS Code Extensions
+- **Biome** - Linter and formatter
+- **ESLint** - ESLint support
+- **TypeScript** - Advanced TypeScript support
+- **Jest** - Integrated test runner
+- **Code Spell Checker** - Spell checking
 
-### Outils Git
-- **Git** - Installé automatiquement au démarrage
-- **GitHub CLI** - Peut être installé manuellement si nécessaire
+### Git Tools
+- **Git** - Automatically installed at startup
+- **GitHub CLI** - Can be manually installed if needed
 
-### Ports exposés
-- **3000** - Application (avec notification auto)
-- **9229** - Node.js Debug (silencieux)
+### Exposed Ports
+- **3000** - Application (with auto notification)
+- **9229** - Node.js Debug (silent)
 
-## 📝 Scripts disponibles
+## 📝 Available Scripts
 
-Une fois dans le container, tous les scripts npm sont disponibles :
+Once in the container, all npm scripts are available:
 
 ```bash
 # Tests
-pnpm test                 # Exécuter tous les tests
-pnpm test:coverage        # Tests avec couverture
+pnpm test                 # Run all tests
+pnpm test:coverage        # Tests with coverage
 
 # Build
-pnpm build                # Builder le projet
-pnpm build:lib            # Builder la librairie
-pnpm watch:tsup           # Mode watch
+pnpm build                # Build the project
+pnpm build:lib            # Build the library
+pnpm watch:tsup           # Watch mode
 
-# Qualité de code
-pnpm lint                 # Linter le code
-pnpm lint:fix             # Corriger automatiquement
-pnpm format               # Formatter le code
-pnpm quality              # Vérifier qualité complète
+# Code Quality
+pnpm lint                 # Lint the code
+pnpm lint:fix             # Automatically fix linting issues
+pnpm format               # Format the code
+pnpm quality              # Check full quality
 ```
 
-## 🔄 Configuration post-création
+## 🔄 Post-Creation Configuration
 
-Le container exécute automatiquement :
-1. `corepack enable` - Active pnpm
-2. `pnpm install` - Installe les dépendances
-3. Configure Git avec votre `.gitconfig` local
+The container automatically executes:
+1. `corepack enable` - Enables pnpm
+2. `pnpm install` - Installs dependencies
+3. Configures Git with your local `.gitconfig`
 
 ## 🐛 Debug
 
-Pour débugger avec VS Code dans le container :
-1. Ajouter un breakpoint dans votre code
-2. Aller dans l'onglet "Run and Debug" (Ctrl+Shift+D)
-3. Sélectionner la configuration de debug Node.js
-4. Le port 9229 est automatiquement exposé
+To debug with VS Code in the container:
+1. Add a breakpoint in your code
+2. Go to the "Run and Debug" tab (Ctrl+Shift+D)
+3. Select the Node.js debug configuration
+4. Port 9229 is automatically exposed
 
-## 📂 Montages
+## 📂 Mounts
 
-- **`.gitconfig`** - Votre configuration Git locale est montée en lecture seule
-- **Workspace** - Le dossier du projet est monté automatiquement
+- **`.gitconfig`** - Your local Git configuration is mounted read-only
+- **Workspace** - The project folder is mounted automatically
 
-## ⚙️ Personnalisation
+## ⚙️ Customization
 
-Pour personnaliser le container, modifiez `.devcontainer/devcontainer.json` :
+To customize the container, modify `.devcontainer/devcontainer.json`:
 
 ```json
 {
   "customizations": {
     "vscode": {
-      "extensions": ["mon-extension"],
+      "extensions": ["my-extension"],
       "settings": {
-        "mon.parametre": "valeur"
+        "my.setting": "value"
       }
     }
   }
@@ -130,28 +130,28 @@ Pour personnaliser le container, modifiez `.devcontainer/devcontainer.json` :
 
 ## 🚨 Troubleshooting
 
-### Le container ne démarre pas
-- Vérifier que Docker Desktop est lancé
-- Vérifier les logs : `Dev Containers: Show Container Log`
+### The container does not start
+- Check that Docker Desktop is running
+- Check the logs: `Dev Containers: Show Container Log`
 
-### Problème de proxy
-- Vérifier les variables d'environnement sur l'hôte
-- **Important** : Utiliser `host.docker.internal` au lieu de `127.0.0.1` ou `localhost`
-- Vérifier que le proxy écoute sur toutes les interfaces (0.0.0.0:9000) et pas seulement localhost
-- Tester dans le container : `curl -v --proxy http://host.docker.internal:9000 https://www.google.com`
-- Vérifier `.npmrc` si pnpm échoue
-- Vérifier les variables : `echo $HTTP_PROXY` dans le terminal du container
+### Proxy Issue
+- Check environment variables on the host
+- **Important**: Use `host.docker.internal` instead of `127.0.0.1` or `localhost`
+- Check that the proxy listens on all interfaces (0.0.0.0:9000) and not just localhost
+- Test in the container: `curl -v --proxy http://host.docker.internal:9000 https://www.google.com`
+- Check `.npmrc` if pnpm fails
+- Check variables: `echo $HTTP_PROXY` in the container terminal
 
-### Problème Git
-- Vérifier que `.gitconfig` existe sur l'hôte
-- Exécuter manuellement : `git config --global user.name "Votre Nom"`
+### Git Issue
+- Check that `.gitconfig` exists on the host
+- Manually execute: `git config --global user.name "Your Name"`
 
-### Rechargement
-Pour reconstruire complètement le container :
+### Reloading
+To completely rebuild the container:
 - `F1` → `Dev Containers: Rebuild Container`
 
-## 📚 Ressources
+## 📚 Resources
 
-- [Documentation Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers)
+- [Dev Containers Documentation](https://code.visualstudio.com/docs/devcontainers/containers)
 - [Dev Container Spec](https://containers.dev/)
-- [Images disponibles](https://github.com/devcontainers/images)
+- [Available Images](https://github.com/devcontainers/images)

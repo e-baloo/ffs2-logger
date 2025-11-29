@@ -1,20 +1,20 @@
 FROM node:24-bookworm
 
 
-# Installation des dépendances système
+# System dependencies installation
 RUN apt-get update && apt-get install -y \
     git \
     sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# Configuration du répertoire de travail
+# Working directory configuration
 WORKDIR /workspaces/ffs2-logger
 
-# Activation de corepack et configuration pnpm globalement
+# Corepack activation and global pnpm configuration
 RUN corepack enable
 
-# Configuration pnpm pour tous les utilisateurs
+# Pnpm configuration for all users
 # RUN pnpm config set strict-ssl false --location=global
 
-# Reste en root pour éviter les problèmes de permissions avec les volumes montés
+# Stay as root to avoid permission issues with mounted volumes
 CMD ["bash"]

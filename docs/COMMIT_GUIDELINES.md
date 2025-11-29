@@ -1,34 +1,34 @@
 # Conventional Commits
 
-Ce projet utilise les **Conventional Commits** pour maintenir un historique Git propre et générer automatiquement des changelogs.
+This project uses **Conventional Commits** to maintain a clean Git history and automatically generate changelogs.
 
-## Format des commits
+## Commit Format
 
-Vos messages de commit doivent suivre ce format :
+Your commit messages must follow this format:
 
 ```
 <type>: <description>
 
-[body optionnel]
+[optional body]
 
-[footer optionnel]
+[optional footer]
 ```
 
-### Types autorisés :
+### Allowed Types:
 
-- **feat**: Nouvelle fonctionnalité
-- **fix**: Correction de bug
+- **feat**: New feature
+- **fix**: Bug fix
 - **docs**: Documentation
-- **style**: Formatage, points-virgules manquants, etc.
-- **refactor**: Refactoring du code
-- **test**: Ajout de tests manquants
-- **chore**: Maintenance (build, outils, etc.)
-- **perf**: Amélioration des performances
-- **ci**: Changements dans la CI
-- **build**: Changements qui affectent le système de build
-- **revert**: Retour en arrière
+- **style**: Formatting, missing semi-colons, etc.
+- **refactor**: Code refactoring
+- **test**: Adding missing tests
+- **chore**: Maintenance (build, tools, etc.)
+- **perf**: Performance improvements
+- **ci**: CI changes
+- **build**: Build system changes
+- **revert**: Revert a previous commit
 
-### Exemples valides :
+### Valid Examples:
 
 ```bash
 feat: Add JSON logging support
@@ -39,35 +39,35 @@ test: Add unit tests for logger factory
 chore: Update dependencies to latest versions
 ```
 
-### Exemples invalides :
+### Invalid Examples:
 
 ```bash
-# ❌ Pas de type
+# ❌ No type
 Add new feature
 
-# ❌ Type incorrect
+# ❌ Incorrect type
 feature: Add new functionality
 
-# ❌ Pas de description
+# ❌ No description
 feat:
 
-# ❌ Description trop longue (>72 caractères)
+# ❌ Description too long (>72 characters)
 feat: This is a very long description that exceeds the maximum allowed length
 ```
 
-## Validation automatique
+## Automatic Validation
 
-Les commits sont automatiquement validés par `commitlint` via un hook Git. Si votre message ne respecte pas le format, le commit sera rejeté.
+Commits are automatically validated by `commitlint` via a Git hook. If your message does not respect the format, the commit will be rejected.
 
-## Hooks Git actifs
+## Active Git Hooks
 
-- **pre-commit**: Vérifie la qualité du code (lint + format + build)
-- **commit-msg**: Valide le format du message de commit
-- **pre-push**: Exécute tous les tests
+- **pre-commit**: Checks code quality (lint + format + build)
+- **commit-msg**: Validates commit message format
+- **pre-push**: Runs all tests
 
-## Bypass (en cas d'urgence)
+## Bypass (Emergency Only)
 
-⚠️ **Non recommandé** - En cas d'urgence absolue :
+⚠️ **Not Recommended** - In case of absolute emergency:
 
 ```bash
 git commit --no-verify -m "emergency fix"

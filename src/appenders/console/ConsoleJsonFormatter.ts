@@ -2,8 +2,8 @@ import type { IConsoleJsonFormatter } from '../../interfaces/console/IConsoleJso
 import type { LogEvent } from '../../types/LogEvent';
 
 /**
- * Formatter JSON pour les logs console
- * Formate les événements de log en JSON structuré
+ * JSON Formatter for console logs
+ * Formats log events into structured JSON
  */
 export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
     private compact: boolean;
@@ -33,17 +33,17 @@ export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
             message: event.message,
         };
 
-        // Ajouter le contexte si présent
+        // Add context if present
         if (event.context) {
             jsonData.context = event.context;
         }
 
-        // Ajouter les données si présentes
+        // Add data if present
         if (event.data) {
             jsonData.data = event.data;
         }
 
-        // Ajouter l'erreur si présente
+        // Add error if present
         if (event.error) {
             jsonData.error = {
                 message: event.error.message,
@@ -52,7 +52,7 @@ export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
             };
         }
 
-        // Formater en JSON
+        // Format as JSON
         const jsonString = this.compact ? JSON.stringify(jsonData) : JSON.stringify(jsonData, null, 2);
 
         return [jsonString, null, null];

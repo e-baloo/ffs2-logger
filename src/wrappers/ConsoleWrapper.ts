@@ -3,7 +3,7 @@
 import type { ILogger } from '../interfaces/ILogger';
 
 /**
- * Sauvegarde des méthodes console originales
+ * Backup of original console methods
  */
 interface OriginalConsoleMethods {
     log: typeof console.log;
@@ -15,25 +15,25 @@ interface OriginalConsoleMethods {
 }
 
 /**
- * Wrapper pour intercepter tous les appels à console et les rediriger vers le logger
- * Permet de capturer tous les console.log, console.error, etc. dans l'application
- * et de les gérer via le système de logging unifié
+ * Wrapper to intercept all console calls and redirect them to the logger
+ * Allows capturing all console.log, console.error, etc. in the application
+ * and handling them via the unified logging system
  */
 export class ConsoleWrapper {
     private static originalMethods: OriginalConsoleMethods | null = null;
     private static isWrapped = false;
 
     /**
-     * Active l'interception de la console
-     * @param logger - Logger vers lequel rediriger les appels console
-     * @param context - Contexte optionnel pour tous les logs console (par défaut: 'Console')
+     * Enables console interception
+     * @param logger - Logger to redirect console calls to
+     * @param context - Optional context for all console logs (default: 'Console')
      */
     static wrap(logger: ILogger, context: string = 'Console'): void {
         if (ConsoleWrapper.isWrapped) {
             return;
         }
 
-        // Sauvegarde des méthodes originales
+        // Backup original methods
         ConsoleWrapper.originalMethods = {
             log: console.log,
             info: console.info,
@@ -88,7 +88,7 @@ export class ConsoleWrapper {
     }
 
     /**
-     * Désactive l'interception de la console et restaure les méthodes originales
+     * Disables console interception and restores original methods
      */
     static unwrap(): void {
         if (!ConsoleWrapper.isWrapped || !ConsoleWrapper.originalMethods) {
@@ -107,14 +107,14 @@ export class ConsoleWrapper {
     }
 
     /**
-     * Vérifie si la console est actuellement wrappée
+     * Checks if the console is currently wrapped
      */
     static isConsoleWrapped(): boolean {
         return ConsoleWrapper.isWrapped;
     }
 
     /**
-     * Accède aux méthodes console originales (utile pour le debug du logger lui-même)
+     * Accesses original console methods (useful for debugging the logger itself)
      */
     static getOriginalConsole(): OriginalConsoleMethods | null {
         return ConsoleWrapper.originalMethods;

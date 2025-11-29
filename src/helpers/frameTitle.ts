@@ -1,40 +1,40 @@
 /**
- * Type de cadre pour encadrer un titre
+ * Frame type for framing a title
  */
 export type FrameType = 'simple' | 'double';
 
 /**
- * Options pour créer un titre encadré
+ * Options for creating a framed title
  */
 export interface FrameTitleOptions {
     /**
-     * Type de cadre : 'simple' ou 'double'
+     * Frame type: 'simple' or 'double'
      * @default 'simple'
      */
     frameType?: FrameType;
 
     /**
-     * Largeur du cadre en caractères (entre 50 et 200)
+     * Frame width in characters (between 50 and 200)
      * @default 80
      */
     width?: number;
 
     /**
-     * Mode compact : si true, le titre touche directement les bordures
-     * Si false, il y a une ligne vide entre le cadre et le titre
+     * Compact mode: if true, the title touches the borders directly
+     * If false, there is an empty line between the frame and the title
      * @default false
      */
     compact?: boolean;
 
     /**
-     * Affiche la première ligne vide du cadre (par défaut true)
+     * Displays the first empty line of the frame (default true)
      * @default true
      */
     firstEmptyLine?: boolean;
 }
 
 /**
- * Caractères de cadre selon le type
+ * Frame characters by type
  */
 const FRAME_CHARS = {
     simple: {
@@ -56,62 +56,62 @@ const FRAME_CHARS = {
 } as const;
 
 /**
- * Crée un titre encadré dans un cadre ASCII/Unicode
+ * Creates a framed title in an ASCII/Unicode frame
  *
- * @param title - Le titre à encadrer
- * @param options - Options de formatage du cadre
- * @returns Le titre encadré prêt à être affiché
+ * @param title - The title to frame
+ * @param options - Frame formatting options
+ * @returns The framed title ready to be displayed
  *
  * @example
  * ```typescript
- * // Cadre simple compact
- * console.log(frameTitle('Mon Titre'));
+ * // Simple compact frame
+ * console.log(frameTitle('My Title'));
  * // ┌──────────────────────────────────────────────────────────────────────────────┐
- * // │                                  Mon Titre                                   │
+ * // │                                  My Title                                    │
  * // └──────────────────────────────────────────────────────────────────────────────┘
  *
- * // Cadre double non-compact
- * console.log(frameTitle('Mon Titre', { frameType: 'double', compact: false }));
+ * // Double non-compact frame
+ * console.log(frameTitle('My Title', { frameType: 'double', compact: false }));
  * // ╔══════════════════════════════════════════════════════════════════════════════╗
  * // ║                                                                              ║
- * // ║                                  Mon Titre                                   ║
+ * // ║                                  My Title                                    ║
  * // ║                                                                              ║
  * // ╚══════════════════════════════════════════════════════════════════════════════╝
  *
- * // Cadre personnalisé
- * console.log(frameTitle('Court', { width: 50, frameType: 'double', compact: true }));
+ * // Custom frame
+ * console.log(frameTitle('Short', { width: 50, frameType: 'double', compact: true }));
  * // ╔════════════════════════════════════════════════╗
- * // ║                     Court                      ║
+ * // ║                     Short                      ║
  * // ╚════════════════════════════════════════════════╝
  * ```
  */
 export const frameTitle = (title: string, options: FrameTitleOptions = {}): string => {
     const { frameType = 'simple', width = 80, compact = false, firstEmptyLine = true } = options;
 
-    // Validation de la largeur
+    // Width validation
     const minWidth = 50;
     const maxWidth = 200;
     const finalWidth = Math.max(minWidth, Math.min(maxWidth, width));
 
-    // Récupération des caractères de cadre
+    // Get frame characters
     const chars = FRAME_CHARS[frameType];
 
-    // Largeur intérieure (sans les bordures verticales)
+    // Inner width (without vertical borders)
     const innerWidth = finalWidth - 2;
 
-    // Création de la ligne horizontale
+    // Create horizontal line
     const horizontalLine = chars.horizontal.repeat(innerWidth);
 
-    // Création de la ligne supérieure
+    // Create top line
     const topLine = chars.topLeft + horizontalLine + chars.topRight;
 
-    // Création de la ligne inférieure
+    // Create bottom line
     const bottomLine = chars.bottomLeft + horizontalLine + chars.bottomRight;
 
-    // Création d'une ligne vide
+    // Create empty line
     const emptyLine = chars.vertical + ' '.repeat(innerWidth) + chars.vertical;
 
-    // Centrage du titre
+    // Center title
     const titleLength = title.length;
     const paddingTotal = innerWidth - titleLength;
     const paddingLeft = Math.floor(paddingTotal / 2);
@@ -119,11 +119,11 @@ export const frameTitle = (title: string, options: FrameTitleOptions = {}): stri
 
     const titleLine = chars.vertical + ' '.repeat(paddingLeft) + title + ' '.repeat(paddingRight) + chars.vertical;
 
-    // Construction du cadre
+    // Build frame
     const lines: string[] = [];
 
     if (firstEmptyLine) {
-        lines.push('\u200B'); // Zero-width space (caractère invisible)
+        lines.push('\u200B'); // Zero-width space (invisible character)
     }
 
     lines.push(topLine);

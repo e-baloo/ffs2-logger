@@ -15,31 +15,31 @@ import { TemplateProvider } from '../providers/TemplateProvider';
 import { DIContainer } from '../services/DIContainer';
 
 /**
- * Conteneur DI global pour l'application
- * Pré-configuré avec les dépendances par défaut de ConsoleAppender
+ * Global DI Container for the application
+ * Pre-configured with default ConsoleAppender dependencies
  */
 export const globalContainer = new DIContainer();
 
 /**
- * Configure le conteneur avec les providers par défaut
- * Tous les services sont enregistrés en tant que singletons pour optimiser les performances
+ * Configures the container with default providers
+ * All services are registered as singletons to optimize performance
  */
 export function configureDefaultContainer(): void {
-    // Service de colorisation - Singleton
+    // Colorization Service - Singleton
     globalContainer.register({
         token: CONSOLE_COLORIZED_TOKEN,
         useFactory: () => new ConsoleColorized(),
         singleton: true,
     });
 
-    // Provider de template - Singleton
+    // Template Provider - Singleton
     globalContainer.register({
         token: TEMPLATE_PROVIDER_TOKEN,
         useFactory: () => new TemplateProvider(),
         singleton: true,
     });
 
-    // Service de formatage - Singleton (dépend de colorized et templateProvider)
+    // Formatting Service - Singleton (depends on colorized and templateProvider)
     globalContainer.register({
         token: CONSOLE_FORMATTER_TOKEN,
         useFactory: () =>
@@ -50,21 +50,21 @@ export function configureDefaultContainer(): void {
         singleton: true,
     });
 
-    // Service de formatage JSON - Singleton
+    // JSON Formatting Service - Singleton
     globalContainer.register({
         token: CONSOLE_JSON_FORMATTER_TOKEN,
         useFactory: () => new ConsoleJsonFormatter(),
         singleton: true,
     });
 
-    // Service de formatage emoji - Singleton
+    // Emoji Formatting Service - Singleton
     globalContainer.register({
         token: EMOJI_FORMATTER_TOKEN,
         useFactory: () => new EmojiFormatter(),
         singleton: true,
     });
 
-    // Service d'impression - Singleton
+    // Printing Service - Singleton
     globalContainer.register({
         token: CONSOLE_PRINTER_TOKEN,
         useFactory: () => new ConsolePrinter(),
@@ -72,5 +72,5 @@ export function configureDefaultContainer(): void {
     });
 }
 
-// Configuration automatique au chargement du module
+// Automatic configuration on module load
 configureDefaultContainer();

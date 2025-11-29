@@ -1,23 +1,23 @@
 /**
- * Démonstration pratique du respect des principes SOLID
- * dans ffs2-logger avec exemples concrets d'extensibilité
+ * Practical demonstration of SOLID principles compliance
+ * in ffs2-logger with concrete examples of extensibility
  */
 
 import {
-    LOGGER_SERVICE,
-    logEventPool,
-    lazyFormatterRegistry,
     AAsyncBatchAppender,
+    LOGGER_SERVICE,
+    lazyFormatterRegistry,
+    logEventPool,
     type ILoggerAppender,
     type LogLevel
 } from '../src/index';
 import type { LogEvent } from '../src/types/LogEvent';
 
 // ==========================================
-// CLASSES POUR LA DÉMONSTRATION
+// CLASSES FOR DEMONSTRATION
 // ==========================================
 
-// Extension 2: Nouvel appender via héritage
+// Extension 2: New appender via inheritance
 class MemoryAppender extends AAsyncBatchAppender {
     private logs: string[] = [];
 
@@ -43,16 +43,16 @@ class MemoryAppender extends AAsyncBatchAppender {
     }
 }
 
-// Création d'une classe qui dépend des abstractions
+// Creation of a class that depends on abstractions
 class SOLIDLogger {
     constructor(
-        private service: typeof LOGGER_SERVICE,  // Interface ILoggerService
-        private pool: typeof logEventPool,       // Interface de pool
-        private registry: typeof lazyFormatterRegistry // Interface de registry
+        private service: typeof LOGGER_SERVICE,  // ILoggerService Interface
+        private pool: typeof logEventPool,       // Pool Interface
+        private registry: typeof lazyFormatterRegistry // Registry Interface
     ) { }
 
     async logWithOptimizations(level: LogLevel, message: string, data?: unknown) {
-        // Utilise le pool d'objets
+        // Uses the object pool
         const event = this.pool.acquire();
 
         try {
@@ -62,54 +62,54 @@ class SOLIDLogger {
             event.data = data;
             event.context = 'SOLID-demo';
 
-            // Utilise le formatter lazy-loadé
+            // Uses the lazy-loaded formatter
             const formatter = this.registry.getFormatter('json-pretty');
             if (formatter) {
                 event.message = formatter(message, data);
             }
 
-            // Utilise le service logger
+            // Uses the logger service
             const logger = this.service.createLogger('SOLIDDemo');
             await logger.sendEvent(event);
 
         } finally {
-            // Retourne au pool
+            // Returns to the pool
             this.pool.release(event);
         }
     }
 }
 
 // ==========================================
-// DÉMONSTRATION SOLID PRINCIPLES
+// SOLID PRINCIPLES DEMONSTRATION
 // ==========================================
 
 async function demonstrateSOLID() {
-    console.log('🏗️ Démonstration Architecture SOLID - ffs2-logger\n');
+    console.log('🏗️ SOLID Architecture Demonstration - ffs2-logger\n');
 
     // ==========================================
     // 1. SINGLE RESPONSIBILITY PRINCIPLE
     // ==========================================
     console.log('📋 1. Single Responsibility Principle');
 
-    // ✅ Chaque classe a UNE responsabilité claire
-    console.log('✅ Pool d\'objets - UNIQUEMENT pooling:');
+    // ✅ Each class has ONE clear responsibility
+    console.log('✅ Object Pool - ONLY pooling:');
     console.log('   Pool stats:', logEventPool.getStats());
 
-    console.log('✅ Registry lazy - UNIQUEMENT lazy loading:');
-    console.log('   Formatters disponibles:', lazyFormatterRegistry.getAvailableFormatters());
+    console.log('✅ Lazy Registry - ONLY lazy loading:');
+    console.log('   Available Formatters:', lazyFormatterRegistry.getAvailableFormatters());
     console.log('   Registry stats:', lazyFormatterRegistry.getStats());
 
-    console.log('✅ LoggerService - UNIQUEMENT gestion des loggers:');
-    console.log('   Nombre d\'appenders:', LOGGER_SERVICE.listAppenders().length);
+    console.log('✅ LoggerService - ONLY logger management:');
+    console.log('   Number of appenders:', LOGGER_SERVICE.listAppenders().length);
     console.log('');
 
     // ==========================================
     // 2. OPEN/CLOSED PRINCIPLE
     // ==========================================
-    console.log('🔓 2. Open/Closed Principle - Extension sans modification');
+    console.log('🔓 2. Open/Closed Principle - Extension without modification');
 
-    // Extension 1: Nouveau formatter sans modifier le code existant
-    console.log('✅ Extension 1: Nouveau formatter JSON');
+    // Extension 1: New formatter without modifying existing code
+    console.log('✅ Extension 1: New JSON formatter');
     lazyFormatterRegistry.registerFormatter('json-pretty', () => {
         return (message: string, data?: unknown) => {
             return JSON.stringify({
@@ -126,31 +126,31 @@ async function demonstrateSOLID() {
         console.log('   Formatter result preview:', result.substring(0, 50) + '...');
     }
 
-    // Extension 2: Nouvel appender via héritage
-    console.log('✅ Extension 2: Nouvel appender Memory sans modification');
+    // Extension 2: New appender via inheritance
+    console.log('✅ Extension 2: New Memory appender without modification');
 
     const memoryAppender = new MemoryAppender();
     await memoryAppender.initialize();
-    console.log('   Memory appender créé et initialisé');
+    console.log('   Memory appender created and initialized');
     console.log('');
 
     // ==========================================
     // 3. LISKOV SUBSTITUTION PRINCIPLE
     // ==========================================
-    console.log('🔄 3. Liskov Substitution Principle - Substituabilité parfaite');
+    console.log('🔄 3. Liskov Substitution Principle - Perfect substitutability');
 
-    // Toutes les implémentations d'appenders sont parfaitement substituables
+    // All appender implementations are perfectly substitutable
     const testAppenders: ILoggerAppender[] = [
         memoryAppender,
-        // Tous respectent le même contrat ILoggerAppender
+        // All respect the same ILoggerAppender contract
     ];
 
-    console.log('✅ Test de substitution:');
+    console.log('✅ Substitution test:');
     for (const appender of testAppenders) {
-        // Même interface pour tous
+        // Same interface for all
         console.log(`   - ${appender.constructor.name}: Level=${appender.getLogLevel()}, Initialized=${appender.isInitialized()}`);
 
-        // Comportement identique garanti
+        // Identical behavior guaranteed
         const testEvent: LogEvent = {
             level: 'info',
             message: 'Test substitution',
@@ -161,23 +161,23 @@ async function demonstrateSOLID() {
         await appender.append(testEvent);
     }
 
-    // Vérification que MemoryAppender a bien reçu le log
-    console.log('   Memory logs reçus:', memoryAppender.getLogs());
+    // Verification that MemoryAppender received the log
+    console.log('   Memory logs received:', memoryAppender.getLogs());
     console.log('');
 
     // ==========================================
     // 4. INTERFACE SEGREGATION PRINCIPLE
     // ==========================================
-    console.log('🧩 4. Interface Segregation Principle - Interfaces spécialisées');
+    console.log('🧩 4. Interface Segregation Principle - Specialized Interfaces');
 
-    // Les clients n'utilisent que les interfaces dont ils ont besoin
+    // Clients only use the interfaces they need
     function logLevelChecker(provider: { getLogLevel(): LogLevel }) {
-        // Interface minimale - juste getLogLevel
+        // Minimal interface - just getLogLevel
         return provider.getLogLevel();
     }
 
     function lifecycleManager(component: { initialize(): void; isInitialized(): boolean }) {
-        // Interface minimale - juste lifecycle
+        // Minimal interface - just lifecycle
         if (!component.isInitialized()) {
             component.initialize();
         }
@@ -185,11 +185,11 @@ async function demonstrateSOLID() {
     }
 
     function identifierChecker(component: { getSymbolIdentifier(): symbol }) {
-        // Interface minimale - juste identifier
+        // Minimal interface - just identifier
         return component.getSymbolIdentifier().toString();
     }
 
-    console.log('✅ Utilisation d\'interfaces spécialisées:');
+    console.log('✅ Use of specialized interfaces:');
     console.log(`   - LogLevel checker: ${logLevelChecker(LOGGER_SERVICE)}`);
     console.log(`   - Lifecycle manager: ${lifecycleManager(memoryAppender)}`);
     console.log(`   - Identifier: ${identifierChecker(memoryAppender).substring(0, 30)}...`);
@@ -198,53 +198,53 @@ async function demonstrateSOLID() {
     // ==========================================
     // 5. DEPENDENCY INVERSION PRINCIPLE  
     // ==========================================
-    console.log('⬆️ 5. Dependency Inversion Principle - Dépendance vers abstractions');
+    console.log('⬆️ 5. Dependency Inversion Principle - Dependency on abstractions');
 
-    // ✅ Injection des dépendances (abstractions)
+    // ✅ Dependency Injection (abstractions)
     const solidLogger = new SOLIDLogger(
-        LOGGER_SERVICE,           // Abstraction ILoggerService
-        logEventPool,            // Abstraction Pool
-        lazyFormatterRegistry    // Abstraction Registry
+        LOGGER_SERVICE,           // ILoggerService Abstraction
+        logEventPool,            // Pool Abstraction
+        lazyFormatterRegistry    // Registry Abstraction
     );
 
-    console.log('✅ Logger SOLID créé avec injection de dépendances');
+    console.log('✅ SOLID Logger created with dependency injection');
 
-    // Ajout de l'appender memory pour voir le résultat
+    // Adding memory appender to see the result
     LOGGER_SERVICE.addAppender(memoryAppender);
 
-    // Test du logging avec toutes les optimisations
-    await solidLogger.logWithOptimizations('info', 'Message SOLID', {
+    // Logging test with all optimizations
+    await solidLogger.logWithOptimizations('info', 'SOLID Message', {
         principle: 'Dependency Inversion',
         working: true
     });
 
-    console.log('✅ Log avec optimisations envoyé');
+    console.log('✅ Log with optimizations sent');
     await memoryAppender.forceFlush();
 
-    console.log('   Memory logs finaux:', memoryAppender.getLogs());
+    console.log('   Final Memory logs:', memoryAppender.getLogs());
     console.log('');
 
     // ==========================================
-    // RÉSUMÉ DE L'ARCHITECTURE SOLID
+    // SOLID ARCHITECTURE SUMMARY
     // ==========================================
-    console.log('🎯 RÉSUMÉ - Architecture SOLID');
-    console.log('✅ S - Single Responsibility: Chaque classe a une responsabilité claire');
-    console.log('✅ O - Open/Closed: Extension facile via interfaces et héritage');
-    console.log('✅ L - Liskov Substitution: Implémentations parfaitement substituables');
-    console.log('✅ I - Interface Segregation: Interfaces atomiques et spécialisées');
-    console.log('✅ D - Dependency Inversion: Dépendance vers abstractions');
+    console.log('🎯 SUMMARY - SOLID Architecture');
+    console.log('✅ S - Single Responsibility: Each class has a clear responsibility');
+    console.log('✅ O - Open/Closed: Easy extension via interfaces and inheritance');
+    console.log('✅ L - Liskov Substitution: Implementations perfectly substitutable');
+    console.log('✅ I - Interface Segregation: Atomic and specialized interfaces');
+    console.log('✅ D - Dependency Inversion: Dependency on abstractions');
 
-    console.log('\n📊 Stats finales:');
+    console.log('\n📊 Final Stats:');
     console.log('   Pool stats:', logEventPool.getStats());
     console.log('   Registry stats:', lazyFormatterRegistry.getStats());
     console.log('   Memory appender stats:', memoryAppender.getStats());
 
-    // Nettoyage
+    // Cleanup
     await memoryAppender.destroy();
-    console.log('\n✅ Démonstration SOLID terminée avec succès! 🚀');
+    console.log('\n✅ SOLID Demonstration successfully completed! 🚀');
 }
 
-// Exécuter la démonstration
+// Run the demonstration
 demonstrateSOLID().catch(console.error);
 
-export { SOLIDLogger, MemoryAppender };
+export { MemoryAppender, SOLIDLogger };

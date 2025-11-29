@@ -1,29 +1,29 @@
-# Guide d'Intégration des Optimisations de Performance
+# Performance Optimization Integration Guide
 
-Ce guide explique comment utiliser les optimisations de performance implémentées dans ffs2-logger.
+This guide explains how to use the performance optimizations implemented in ffs2-logger.
 
-## 🚀 Optimisations Disponibles
+## 🚀 Available Optimizations
 
-### 1. Lazy Loading des Formatters
-Les formatters sont chargés à la demande pour réduire le temps de démarrage et la consommation mémoire.
+### 1. Lazy Loading of Formatters
+Formatters are loaded on demand to reduce startup time and memory consumption.
 
-### 2. Pool d'Objets pour LogEvent
-Réutilisation des objets LogEvent pour réduire les allocations et la pression sur le Garbage Collector.
+### 2. Object Pool for LogEvent
+Reuse of LogEvent objects to reduce allocations and pressure on the Garbage Collector.
 
-### 3. Async Appenders avec Batching
-Traitement par lots des événements de log pour améliorer les performances des appenders asynchrones.
+### 3. Async Appenders with Batching
+Batch processing of log events to improve the performance of asynchronous appenders.
 
-## 📦 1. Lazy Loading des Formatters
+## 📦 1. Lazy Loading of Formatters
 
-### Utilisation de base
+### Basic Usage
 ```typescript
 import { lazyFormatterRegistry } from '@ffs2/logger';
 
-// Voir les formatters disponibles
+// See available formatters
 const available = lazyFormatterRegistry.getAvailableFormatters();
 console.log('Formatters:', available); // ['printf']
 
-// Obtenir un formatter (chargé à la demande)
+// Get a formatter (loaded on demand)
 const printf = lazyFormatterRegistry.getFormatter('printf');
 if (printf) {
     const result = printf('Hello %s!', 'World');
@@ -31,27 +31,27 @@ if (printf) {
 }
 ```
 
-### Enregistrer vos propres formatters
+### Registering Your Own Formatters
 ```typescript
-// Enregistrer un formatter custom (factory pattern)
+// Register a custom formatter (factory pattern)
 lazyFormatterRegistry.registerFormatter('custom', () => {
     return (template: string, ...args: any[]) => {
-        // Votre logique de formatage custom
+        // Your custom formatting logic
         return template.replace(/{(\d+)}/g, (match, number) => {
             return args[number] !== undefined ? args[number] : match;
         });
     };
 });
 
-// Utiliser le formatter custom
+// Use the custom formatter
 const customFormatter = lazyFormatterRegistry.getFormatter('custom');
 const result = customFormatter?.('{0} is {1} years old', 'Alice', 30);
 // "Alice is 30 years old"
 ```
 
-### Enregistrer des transformers
+### Registering Transformers
 ```typescript
-// Enregistrer des transformers pour le formatage
+// Register transformers for formatting
 lazyFormatterRegistry.registerTransformers('markdown', () => ({
     bold: (text: string) => `**${text}**`,
     italic: (text: string) => `*${text}*`,
@@ -62,30 +62,30 @@ const mdTransformers = lazyFormatterRegistry.getTransformers('markdown');
 console.log(mdTransformers?.bold('Important')); // "**Important**"
 ```
 
-## 🏊 2. Pool d'Objets LogEvent
+## 🏊 2. LogEvent Object Pool
 
-### Utilisation de base
+### Basic Usage
 ```typescript
 import { logEventPool } from '@ffs2/logger';
 
-// Acquérir un objet du pool
+// Acquire an object from the pool
 const event = logEventPool.acquire();
 
-// Configurer l'événement
+// Configure the event
 event.level = 'info';
-event.message = 'Message important';
+event.message = 'Important message';
 event.timestamp = Date.now();
-event.context = 'mon-service';
+event.context = 'my-service';
 event.data = { userId: 123, action: 'login' };
 
-// Utiliser l'événement
+// Use the event
 console.log(event.message);
 
-// IMPORTANT: Remettre l'objet dans le pool après usage
+// IMPORTANT: Return the object to the pool after use
 logEventPool.release(event);
 ```
 
-### Pattern recommandé avec try/finally
+### Recommended Pattern with try/finally
 ```typescript
 async function logWithPooling(level: string, message: string, data?: any) {
     const event = logEventPool.acquire();
@@ -96,67 +96,67 @@ async function logWithPooling(level: string, message: string, data?: any) {
         event.timestamp = Date.now();
         event.data = data;
         
-        // Traiter l'événement
+        // Process the event
         await someAppender.append(event);
         
     } finally {
-        // Toujours remettre dans le pool
+        // Always return to the pool
         logEventPool.release(event);
     }
 }
 ```
 
-### Monitoring du pool
+### Pool Monitoring
 ```typescript
-// Obtenir les statistiques
+// Get statistics
 const stats = logEventPool.getStats();
 console.log('Pool stats:', {
-    poolSize: stats.poolSize,        // Objets disponibles
-    maxPoolSize: stats.maxPoolSize,  // Taille max du pool
-    created: stats.created,          // Objets créés
-    reused: stats.reused,           // Objets réutilisés
-    hitRate: stats.hitRate          // Taux de réutilisation
+    poolSize: stats.poolSize,        // Available objects
+    maxPoolSize: stats.maxPoolSize,  // Max pool size
+    created: stats.created,          // Objects created
+    reused: stats.reused,           // Objects reused
+    hitRate: stats.hitRate          // Reuse rate
 });
 
-// Préchauffer le pool (optionnel)
-logEventPool.prewarm(20); // Créer 20 objets en avance
+// Prewarm the pool (optional)
+logEventPool.prewarm(20); // Create 20 objects in advance
 ```
 
-## 📝 3. Async Appenders avec Batching
+## 📝 3. Async Appenders with Batching
 
-### Configuration de base
+### Basic Configuration
 ```typescript
 import { FileAsyncBatchAppender } from '@ffs2/logger';
 
 const batchAppender = new FileAsyncBatchAppender({
     filePath: './logs/app.log',
-    maxBatchSize: 100,          // Max 100 événements par lot
-    maxWaitTime: 1000,          // Max 1s d'attente
-    maxMemoryUsage: 1024 * 1024, // Max 1MB en mémoire
-    enableRetry: true,          // Retry en cas d'erreur
-    maxRetries: 3,              // Max 3 tentatives
-    append: true                // Ajouter au fichier existant
+    maxBatchSize: 100,          // Max 100 events per batch
+    maxWaitTime: 1000,          // Max 1s wait
+    maxMemoryUsage: 1024 * 1024, // Max 1MB in memory
+    enableRetry: true,          // Retry on error
+    maxRetries: 3,              // Max 3 attempts
+    append: true                // Append to existing file
 });
 
-// Initialiser l'appender
+// Initialize the appender
 await batchAppender.initialize();
 ```
 
-### Intégration avec le logger
+### Integration with Logger
 ```typescript
 import { LOGGER_SERVICE } from '@ffs2/logger';
 
-// Ajouter l'appender au service logger
+// Add the appender to the logger service
 LOGGER_SERVICE.addAppender(batchAppender);
 
-// Les logs sont automatiquement mis en lot
+// Logs are automatically batched
 LOGGER_SERVICE.info('Message 1');
 LOGGER_SERVICE.info('Message 2');
 LOGGER_SERVICE.info('Message 3');
-// Ces 3 messages peuvent être traités en un seul lot
+// These 3 messages can be processed in a single batch
 ```
 
-### Appender personnalisé avec batching
+### Custom Appender with Batching
 ```typescript
 import { AsyncBatchAppender, type LogEvent } from '@ffs2/logger';
 
@@ -171,7 +171,7 @@ export class DatabaseBatchAppender extends AsyncBatchAppender {
     }
 
     protected async processBatch(events: LogEvent[]): Promise<void> {
-        // Implémenter votre logique de traitement
+        // Implement your processing logic
         const statements = events.map(event => ({
             level: event.level,
             message: event.message,
@@ -180,38 +180,38 @@ export class DatabaseBatchAppender extends AsyncBatchAppender {
             data: JSON.stringify(event.data)
         }));
 
-        // Insérer en base en une seule requête
+        // Insert into database in a single query
         await this.insertBatch(statements);
     }
 
     private async insertBatch(statements: any[]): Promise<void> {
-        // Votre logique d'insertion en base
+        // Your database insertion logic
         console.log(\`Inserting \${statements.length} log entries\`);
     }
 }
 ```
 
-### Monitoring des performances
+### Performance Monitoring
 ```typescript
-// Obtenir les stats de performance
+// Get performance stats
 const stats = batchAppender.getStats();
 console.log('Batch performance:', {
-    totalEvents: stats.totalEvents,     // Événements traités
-    batchesFlushed: stats.batchesFlushed, // Lots traités
-    avgBatchSize: stats.avgBatchSize,   // Taille moyenne des lots
-    pendingEvents: stats.pendingEvents, // Événements en attente
-    errors: stats.errors,               // Erreurs rencontrées
-    retries: stats.retries,             // Tentatives de retry
-    config: stats.config                // Configuration actuelle
+    totalEvents: stats.totalEvents,     // Events processed
+    batchesFlushed: stats.batchesFlushed, // Batches processed
+    avgBatchSize: stats.avgBatchSize,   // Average batch size
+    pendingEvents: stats.pendingEvents, // Events pending
+    errors: stats.errors,               // Errors encountered
+    retries: stats.retries,             // Retry attempts
+    config: stats.config                // Current configuration
 });
 
-// Forcer un flush (pour les tests ou arrêt)
+// Force a flush (for tests or shutdown)
 await batchAppender.forceFlush();
 ```
 
-## 🔄 Intégration Complete
+## 🔄 Complete Integration
 
-Voici un exemple d'intégration complète des trois optimisations :
+Here is an example of complete integration of the three optimizations:
 
 ```typescript
 import { 
@@ -221,26 +221,26 @@ import {
     FileAsyncBatchAppender 
 } from '@ffs2/logger';
 
-// Configuration du système de log optimisé
+// Optimized logging system setup
 export async function setupOptimizedLogging() {
-    // 1. Configurer les formatters custom
+    // 1. Configure custom formatters
     lazyFormatterRegistry.registerFormatter('json', () => {
         return (message: string, data?: any) => {
             return JSON.stringify({ message, data, timestamp: new Date() });
         };
     });
 
-    // 2. Préchauffer le pool d'objets
+    // 2. Prewarm the object pool
     logEventPool.prewarm(50);
 
-    // 3. Configurer l'appender avec batching
+    // 3. Configure the appender with batching
     const batchAppender = new FileAsyncBatchAppender({
         filePath: './logs/app-optimized.log',
         maxBatchSize: 50,
         maxWaitTime: 1000,
         enableRetry: true,
         formatter: (event) => {
-            // Utiliser le formatter lazy-loaded
+            // Use the lazy-loaded formatter
             const jsonFormatter = lazyFormatterRegistry.getFormatter('json');
             return jsonFormatter ? 
                 jsonFormatter(event.message, event.data) : 
@@ -254,7 +254,7 @@ export async function setupOptimizedLogging() {
     return { batchAppender };
 }
 
-// Fonction de log optimisée
+// Optimized log function
 export async function logOptimized(
     level: 'info' | 'warn' | 'error', 
     message: string, 
@@ -274,15 +274,15 @@ export async function logOptimized(
     }
 }
 
-// Utilisation
+// Usage
 async function main() {
     const { batchAppender } = await setupOptimizedLogging();
     
-    // Logging optimisé
+    // Optimized logging
     await logOptimized('info', 'Application started', { version: '1.0.0' });
     await logOptimized('info', 'User logged in', { userId: 123 });
     
-    // Nettoyage à l'arrêt
+    // Cleanup on shutdown
     process.on('SIGTERM', async () => {
         await batchAppender.destroy();
         console.log('Logging system shut down gracefully');
@@ -291,27 +291,27 @@ async function main() {
 }
 ```
 
-## 📊 Gains de Performance Attendus
+## 📊 Expected Performance Gains
 
-- **Lazy Loading**: -20% à -40% du temps de démarrage selon le nombre de formatters
-- **Object Pooling**: -30% à -60% d'allocations mémoire en régime établi  
-- **Async Batching**: -50% à -80% d'opérations I/O selon la configuration
+- **Lazy Loading**: -20% to -40% startup time depending on the number of formatters
+- **Object Pooling**: -30% to -60% memory allocations in steady state  
+- **Async Batching**: -50% to -80% I/O operations depending on configuration
 
-## ⚠️ Bonnes Pratiques
+## ⚠️ Best Practices
 
-1. **Pool d'objets**: Toujours appeler `release()` après usage
-2. **Batching**: Ajuster `maxBatchSize` et `maxWaitTime` selon vos besoins
-3. **Monitoring**: Surveiller les stats pour optimiser les paramètres
-4. **Cleanup**: Appeler `destroy()` sur les appenders avant l'arrêt
-5. **Tests**: Utiliser `forceFlush()` pour les tests synchrones
+1. **Object Pool**: Always call `release()` after use
+2. **Batching**: Adjust `maxBatchSize` and `maxWaitTime` according to your needs
+3. **Monitoring**: Monitor stats to optimize parameters
+4. **Cleanup**: Call `destroy()` on appenders before shutdown
+5. **Tests**: Use `forceFlush()` for synchronous tests
 
 ## 🔧 Debugging
 
 ```typescript
-// Logger les performances
+// Log performance
 setInterval(() => {
     console.log('Pool stats:', logEventPool.getStats());
     console.log('Registry stats:', lazyFormatterRegistry.getStats());
     console.log('Batch stats:', batchAppender.getStats());
-}, 30000); // Toutes les 30 secondes
+}, 30000); // Every 30 seconds
 ```

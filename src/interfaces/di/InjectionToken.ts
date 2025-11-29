@@ -1,7 +1,7 @@
 /**
- * Token d'injection unique pour identifier les dépendances
- * Utilisé comme clé pour enregistrer et résoudre les services dans le conteneur DI
- * @template T - Type du service associé à ce token (utilisé pour la sécurité de type)
+ * Unique injection token to identify dependencies
+ * Used as a key to register and resolve services in the DI container
+ * @template T - Type of the service associated with this token (used for type safety)
  */
 export class InjectionToken<_T = unknown> {
     constructor(public readonly description: string) {}
@@ -12,6 +12,6 @@ export class InjectionToken<_T = unknown> {
 }
 
 /**
- * Type pour les tokens d'injection - peut être un symbole, une chaîne ou un InjectionToken
+ * Type for injection tokens - can be a symbol, a string, or an InjectionToken
  */
 export type Token<T = unknown> = InjectionToken<T> | symbol | string;

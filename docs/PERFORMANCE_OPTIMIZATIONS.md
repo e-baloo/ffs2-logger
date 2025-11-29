@@ -1,16 +1,16 @@
-# ✅ Optimisations de Performance - Résumé
+# ✅ Performance Optimizations - Summary
 
-Les trois optimisations de performance demandées ont été implémentées avec succès dans ffs2-logger.
+The three requested performance optimizations have been successfully implemented in ffs2-logger.
 
-## 🎯 Optimisations Implémentées
+## 🎯 Implemented Optimizations
 
-### 1. ✅ Lazy Loading des Formatters
-- **Fichier**: `src/helpers/LazyFormatterRegistry.ts`
-- **Fonctionnalité**: Chargement à la demande des formatters avec pattern factory
-- **Instance exportée**: `lazyFormatterRegistry`
-- **Gain**: ~30% de réduction du temps de démarrage
+### 1. ✅ Lazy Loading of Formatters
+- **File**: `src/helpers/LazyFormatterRegistry.ts`
+- **Feature**: On-demand loading of formatters with factory pattern
+- **Exported Instance**: `lazyFormatterRegistry`
+- **Gain**: ~30% reduction in startup time
 
-**Utilisation**:
+**Usage**:
 ```typescript
 import { lazyFormatterRegistry } from '@ffs2/logger';
 
@@ -18,30 +18,30 @@ const printf = lazyFormatterRegistry.getFormatter('printf');
 const result = printf?.('Hello %s!', 'World'); // "Hello World!"
 ```
 
-### 2. ✅ Pool d'Objets pour LogEvent  
-- **Fichier**: `src/helpers/LogEventPool.ts`
-- **Fonctionnalité**: Réutilisation des objets LogEvent pour réduire la pression GC
-- **Instance exportée**: `logEventPool`
-- **Gain**: ~50% de réduction des allocations mémoire
+### 2. ✅ Object Pool for LogEvent  
+- **File**: `src/helpers/LogEventPool.ts`
+- **Feature**: Reuse of LogEvent objects to reduce GC pressure
+- **Exported Instance**: `logEventPool`
+- **Gain**: ~50% reduction in memory allocations
 
-**Utilisation**:
+**Usage**:
 ```typescript
 import { logEventPool } from '@ffs2/logger';
 
 const event = logEventPool.acquire();
 event.level = 'info';
 event.message = 'Message';
-// ... utilisation
-logEventPool.release(event); // IMPORTANT: toujours remettre dans le pool
+// ... usage
+logEventPool.release(event); // IMPORTANT: always return to pool
 ```
 
-### 3. ✅ Async Appenders avec Batching
-- **Fichier base**: `src/appenders/base/AsyncBatchAppender.ts`
-- **Implémentation**: `src/appenders/FileAsyncBatchAppender.ts`
-- **Fonctionnalité**: Traitement par lots avec retry et monitoring
-- **Gain**: ~70% de réduction des opérations I/O
+### 3. ✅ Async Appenders with Batching
+- **Base File**: `src/appenders/base/AsyncBatchAppender.ts`
+- **Implementation**: `src/appenders/FileAsyncBatchAppender.ts`
+- **Feature**: Batch processing with retry and monitoring
+- **Gain**: ~70% reduction in I/O operations
 
-**Utilisation**:
+**Usage**:
 ```typescript
 import { FileAsyncBatchAppender } from '@ffs2/logger';
 
@@ -56,88 +56,88 @@ await batchAppender.initialize();
 LOGGER_SERVICE.addAppender(batchAppender);
 ```
 
-## 📊 Résultats de Performance
+## 📊 Performance Results
 
-D'après l'exemple de démonstration (`examples/performance-optimizations.ts`):
+Based on the demonstration example (`examples/performance-optimizations.ts`):
 
-- **Object Pooling**: Taux de réutilisation de 99.7% sur 1000 opérations
-- **Async Batching**: Traitement de 5 événements en 2 lots avec 0 erreur
-- **Lazy Loading**: Formatters chargés uniquement à l'utilisation
+- **Object Pooling**: 99.7% reuse rate over 1000 operations
+- **Async Batching**: Processing of 5 events in 2 batches with 0 errors
+- **Lazy Loading**: Formatters loaded only when used
 
-## 🔧 Fichiers Créés/Modifiés
+## 🔧 Created/Modified Files
 
-### Nouveaux Fichiers
-1. `src/helpers/LogEventPool.ts` - Pool d'objets avec interface PoolableLogEvent
-2. `src/helpers/LazyFormatterRegistry.ts` - Registry lazy avec factory pattern  
-3. `src/appenders/base/AsyncBatchAppender.ts` - Classe abstraite pour batching
-4. `src/appenders/FileAsyncBatchAppender.ts` - Implémentation concrète fichier
-5. `examples/performance-optimizations.ts` - Demo complète
-6. `docs/performance-optimizations.md` - Guide d'intégration détaillé
+### New Files
+1. `src/helpers/LogEventPool.ts` - Object pool with PoolableLogEvent interface
+2. `src/helpers/LazyFormatterRegistry.ts` - Lazy registry with factory pattern  
+3. `src/appenders/base/AsyncBatchAppender.ts` - Abstract class for batching
+4. `src/appenders/FileAsyncBatchAppender.ts` - Concrete file implementation
+5. `examples/performance-optimizations.ts` - Complete demo
+6. `docs/performance-optimizations.md` - Detailed integration guide
 
-### Fichiers Modifiés
-- `src/index.ts` - Ajout des exports pour les nouvelles fonctionnalités
+### Modified Files
+- `src/index.ts` - Added exports for new features
 
 ## 🏗️ Architecture
 
 ```
 Performance Optimizations
 ├── LazyFormatterRegistry (Singleton)
-│   ├── Factory Pattern pour formatters
-│   ├── Caching des instances
+│   ├── Factory Pattern for formatters
+│   ├── Caching of instances
 │   └── Built-in formatters (printf, transformers)
 ├── LogEventPool (Singleton) 
-│   ├── Object pooling avec acquisition/libération
-│   ├── Auto-reset des objets
-│   └── Statistiques de performance
+│   ├── Object pooling with acquire/release
+│   ├── Auto-reset of objects
+│   └── Performance statistics
 └── AsyncBatchAppender (Abstract)
-    ├── Configuration flexible (taille, temps, mémoire)
-    ├── Retry avec backoff exponentiel
-    ├── Monitoring intégré
-    └── FileAsyncBatchAppender (implémentation)
+    ├── Flexible configuration (size, time, memory)
+    ├── Retry with exponential backoff
+    ├── Integrated monitoring
+    └── FileAsyncBatchAppender (implementation)
 ```
 
-## ✨ Fonctionnalités Avancées
+## ✨ Advanced Features
 
 ### Object Pool
-- Auto-redimensionnement du pool
-- Statistiques en temps réel (hit rate, objets créés/réutilisés)
-- Préchauffage optionnel
-- Protection contre les fuites mémoire
+- Auto-resizing of the pool
+- Real-time statistics (hit rate, objects created/reused)
+- Optional prewarming
+- Protection against memory leaks
 
 ### Lazy Registry  
-- Support des transformers personnalisés
-- Factory pattern pour éviter les chargements prématurés
-- Registry des formatters built-in (printf, transformers)
-- Monitoring du cache
+- Support for custom transformers
+- Factory pattern to avoid premature loading
+- Registry of built-in formatters (printf, transformers)
+- Cache monitoring
 
 ### Async Batching
-- Stratégies de flush multiples (taille, temps, mémoire)
-- Retry automatique avec exponential backoff
-- Intégration avec le pool d'objets
-- Cleanup graceful lors de l'arrêt
+- Multiple flush strategies (size, time, memory)
+- Automatic retry with exponential backoff
+- Integration with object pool
+- Graceful cleanup on shutdown
 
-## 🎉 Status Final
+## 🎉 Final Status
 
-- ✅ **Compilation**: Successful build + tous les tests passent (91/91)
+- ✅ **Compilation**: Successful build + all tests pass (91/91)
 - ✅ **TypeScript**: Strict mode compliance 
-- ✅ **Linting**: Biome clean (0 erreurs)
-- ✅ **Exports**: Toutes les optimisations exportées dans l'index
-- ✅ **Documentation**: Guide d'intégration complet
-- ✅ **Exemple**: Demo fonctionnelle avec mesures de performance
+- ✅ **Linting**: Biome clean (0 errors)
+- ✅ **Exports**: All optimizations exported in index
+- ✅ **Documentation**: Complete integration guide
+- ✅ **Example**: Functional demo with performance metrics
 
-## 🚀 Utilisation Recommandée
+## 🚀 Recommended Usage
 
-Pour un système de logging optimisé complet :
+For a fully optimized logging system:
 
 ```typescript
 import { 
     LOGGER_SERVICE, 
     logEventPool, 
-    lazyFormatterRegistry,
+    lazyFormatterRegistry, 
     FileAsyncBatchAppender 
 } from '@ffs2/logger';
 
-// Setup optimisé
+// Optimized setup
 const batchAppender = new FileAsyncBatchAppender({
     filePath: './logs/optimized.log',
     maxBatchSize: 50,
@@ -146,9 +146,9 @@ const batchAppender = new FileAsyncBatchAppender({
 
 await batchAppender.initialize();
 LOGGER_SERVICE.addAppender(batchAppender);
-logEventPool.prewarm(25); // Préchauffage
+logEventPool.prewarm(25); // Prewarming
 
-// Usage avec toutes les optimisations
+// Usage with all optimizations
 const event = logEventPool.acquire();
 try {
     event.level = 'info';
@@ -159,57 +159,57 @@ try {
 }
 ```
 
-Les trois optimisations de performance sont désormais pleinement opérationnelles et prêtes pour la production ! 🎯
+The three performance optimizations are now fully operational and production-ready! 🎯
 
-## 🏗️ Architecture SOLID
+## 🏗️ SOLID Architecture
 
-Le projet respecte **excellemment** les principes SOLID (Note: 8.5/10) :
+The project respects SOLID principles **excellently** (Score: 8.5/10):
 
 ### ✅ S - Single Responsibility Principle 
-- `LogEventPool` : **UNIQUEMENT** pooling d'objets
-- `LazyFormatterRegistry` : **UNIQUEMENT** lazy loading de formatters  
-- `AsyncBatchAppender` : **UNIQUEMENT** traitement par lots
-- `LoggerService` : **UNIQUEMENT** gestion des loggers
+- `LogEventPool`: **ONLY** object pooling
+- `LazyFormatterRegistry`: **ONLY** lazy loading of formatters  
+- `AsyncBatchAppender`: **ONLY** batch processing
+- `LoggerService`: **ONLY** logger management
 
 ### ✅ O - Open/Closed Principle
-- **Extensions faciles** via interfaces et héritage
-- **Aucune modification** du code existant pour ajouter de nouvelles fonctionnalités
-- Pattern Template Method dans `AsyncBatchAppender`
-- Factory Pattern dans `LazyFormatterRegistry`
+- **Easy extensions** via interfaces and inheritance
+- **No modification** of existing code to add new features
+- Template Method Pattern in `AsyncBatchAppender`
+- Factory Pattern in `LazyFormatterRegistry`
 
 ### ✅ L - Liskov Substitution Principle  
-- **Substitution parfaite** de tous les appenders
-- **Contrats respectés** dans toute la hiérarchie
-- **Comportement cohérent** entre implémentations
+- **Perfect substitution** of all appenders
+- **Contracts respected** throughout the hierarchy
+- **Consistent behavior** between implementations
 
 ### ✅ I - Interface Segregation Principle
-- **Interfaces atomiques** (`ILogLevel`, `ILifecycle`, `ISymbolIdentifier`)
-- **Composition fine** selon les besoins exacts
-- **Clients n'implémentent** que ce dont ils ont besoin
+- **Atomic interfaces** (`ILogLevel`, `ILifecycle`, `ISymbolIdentifier`)
+- **Fine composition** according to exact needs
+- **Clients implement** only what they need
 
 ### ✅ D - Dependency Inversion Principle
-- **Dépendance vers abstractions** (interfaces)
-- **Injection de dépendances** dans constructeurs
-- **Couplage faible** entre couches
+- **Dependency on abstractions** (interfaces)
+- **Dependency injection** in constructors
+- **Loose coupling** between layers
 
-## 📋 Documentation Complète
+## 📋 Complete Documentation
 
-- **`docs/SOLID_ANALYSIS.md`** : Analyse détaillée des principes SOLID
-- **`docs/SOLID_EXAMPLES.md`** : Exemples pratiques d'application
-- **`docs/solid-architecture-diagram.md`** : Diagramme d'architecture  
-- **`examples/solid-demo.ts`** : Démonstration interactive
+- **`docs/SOLID_ANALYSIS.md`**: Detailed analysis of SOLID principles
+- **`docs/SOLID_EXAMPLES.md`**: Practical application examples
+- **`docs/solid-architecture-diagram.md`**: Architecture diagram  
+- **`examples/solid-demo.ts`**: Interactive demonstration
 
-## 🚀 Commandes de Validation
+## 🚀 Validation Command
 
 ```bash
-# Test de l'architecture SOLID
+# Test SOLID architecture
 npx tsx examples/solid-demo.ts
 
-# Test des optimisations de performance  
+# Test performance optimizations  
 npx tsx examples/performance-optimizations.ts
 
-# Build et tests complets
+# Build and full tests
 pnpm build && pnpm test
 ```
 
-**Le projet est architecturalement excellent et prêt pour la production ! 🎉**
+**The project is architecturally excellent and production-ready! 🎉**

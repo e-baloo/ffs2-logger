@@ -1,42 +1,42 @@
 /**
- * Exemple d'utilisation du système DI (Dependency Injection)
- * Démontre comment créer des implémentations personnalisées et les enregistrer dans le conteneur
+ * Dependency Injection (DI) System Usage Example
+ * Demonstrates how to create custom implementations and register them in the container
  */
 
+import type { LogLevel } from '../src/index';
 import {
-    LOGGER_SERVICE,
-    DIContainer,
-    InjectionToken,
-    globalContainer,
-    ConsoleAppender,
-    ConsoleColorized,
-    ConsoleFormatter,
     CONSOLE_COLORIZED_TOKEN,
     CONSOLE_FORMATTER_TOKEN,
     CONSOLE_PRINTER_TOKEN,
-    TEMPLATE_PROVIDER_TOKEN
+    ConsoleAppender,
+    ConsoleColorized,
+    ConsoleFormatter,
+    DIContainer,
+    InjectionToken,
+    LOGGER_SERVICE,
+    TEMPLATE_PROVIDER_TOKEN,
+    globalContainer
 } from '../src/index';
 import type { IConsoleColorized } from '../src/interfaces/console/IConsoleColorized';
 import type { IConsoleFormatter } from '../src/interfaces/console/IConsoleFormatter';
 import type { IConsolePrinter } from '../src/interfaces/console/IConsolePrinter';
-import type { LogLevel } from '../src/index';
 import type { LogEvent } from '../src/types/LogEvent';
 
 console.log('='.repeat(80));
-console.log('🔧 Démonstration du système DI (Dependency Injection)');
+console.log('🔧 Dependency Injection (DI) System Demonstration');
 console.log('='.repeat(80));
 console.log();
 
 // ============================================================================
-// Exemple 1: Utilisation par défaut (sans DI explicite)
+// Example 1: Default Usage (without explicit DI)
 // ============================================================================
-console.log('📦 Exemple 1: Utilisation standard (DI automatique)');
+console.log('📦 Example 1: Standard Usage (Automatic DI)');
 console.log('-'.repeat(80));
 
-// Le ConsoleAppender utilise automatiquement le globalContainer
+// ConsoleAppender automatically uses the globalContainer
 const standardAppender = new ConsoleAppender(LOGGER_SERVICE);
 
-console.log('✅ ConsoleAppender créé avec les dépendances par défaut du container');
+console.log('✅ ConsoleAppender created with default container dependencies');
 console.log('   - Formatter: ConsoleFormatter (singleton)');
 console.log('   - Printer: ConsolePrinter (singleton)');
 console.log('   - Colorizer: ConsoleColorized (singleton)');
@@ -44,22 +44,22 @@ console.log();
 
 LOGGER_SERVICE.addAppender(standardAppender);
 const logger1 = LOGGER_SERVICE.createLogger('DI-Demo');
-logger1.info('Message avec le DI par défaut');
+logger1.info('Message with default DI');
 console.log();
 
 // ============================================================================
-// Exemple 2: Implémentation personnalisée - Colorizer Arc-en-ciel
+// Example 2: Custom Implementation - Rainbow Colorizer
 // ============================================================================
-console.log('🌈 Exemple 2: Colorizer personnalisé (Rainbow)');
+console.log('🌈 Example 2: Custom Colorizer (Rainbow)');
 console.log('-'.repeat(80));
 
 class RainbowColorizer implements IConsoleColorized {
     private readonly colors = [
-        '\x1b[31m', // Rouge
-        '\x1b[33m', // Jaune  
-        '\x1b[32m', // Vert
+        '\x1b[31m', // Red
+        '\x1b[33m', // Yellow  
+        '\x1b[32m', // Green
         '\x1b[36m', // Cyan
-        '\x1b[34m', // Bleu
+        '\x1b[34m', // Blue
         '\x1b[35m', // Magenta
     ];
 
@@ -81,10 +81,10 @@ class RainbowColorizer implements IConsoleColorized {
     }
 }
 
-// Créer un nouveau container pour cet exemple
+// Create a new container for this example
 const rainbowContainer = new DIContainer();
 
-// Enregistrer le RainbowColorizer
+// Register the RainbowColorizer
 const RAINBOW_COLORIZER_TOKEN = new InjectionToken<IConsoleColorized>('RainbowColorizer');
 rainbowContainer.register({
     token: RAINBOW_COLORIZER_TOKEN,
@@ -92,14 +92,14 @@ rainbowContainer.register({
     singleton: true
 });
 
-// Enregistrer le TemplateProvider (nécessaire pour ConsoleFormatter)
+// Register the TemplateProvider (required for ConsoleFormatter)
 rainbowContainer.register({
     token: TEMPLATE_PROVIDER_TOKEN,
     useFactory: () => globalContainer.resolve(TEMPLATE_PROVIDER_TOKEN),
     singleton: true
 });
 
-// Enregistrer un formatter utilisant le RainbowColorizer
+// Register a formatter using the RainbowColorizer
 rainbowContainer.register({
     token: CONSOLE_FORMATTER_TOKEN,
     useFactory: () => new ConsoleFormatter(
@@ -109,23 +109,23 @@ rainbowContainer.register({
     singleton: true
 });
 
-// Créer un appender avec le formatter personnalisé
+// Create an appender with the custom formatter
 const rainbowFormatter = rainbowContainer.resolve(CONSOLE_FORMATTER_TOKEN);
 const rainbowAppender = new ConsoleAppender(LOGGER_SERVICE, rainbowFormatter);
 
-console.log('✅ RainbowColorizer enregistré dans un container personnalisé');
-console.log('✅ ConsoleFormatter créé avec RainbowColorizer');
+console.log('✅ RainbowColorizer registered in a custom container');
+console.log('✅ ConsoleFormatter created with RainbowColorizer');
 console.log();
 
 LOGGER_SERVICE.addAppender(rainbowAppender);
 const logger2 = LOGGER_SERVICE.createLogger('Rainbow');
-logger2.warn('Message coloré avec Rainbow 🌈');
+logger2.warn('Colored message with Rainbow 🌈');
 console.log();
 
 // ============================================================================
-// Exemple 3: Printer personnalisé - Fichier + Console
+// Example 3: Custom Printer - File + Console
 // ============================================================================
-console.log('📄 Exemple 3: Printer personnalisé (Console + Fichier)');
+console.log('📄 Example 3: Custom Printer (Console + File)');
 console.log('-'.repeat(80));
 
 class DualPrinter implements IConsolePrinter {
@@ -137,7 +137,7 @@ class DualPrinter implements IConsolePrinter {
         error: string | null,
         writeStreamType: 'stdout' | 'stderr' = 'stdout'
     ): void {
-        // Écrire sur la console
+        // Write to console
         process[writeStreamType].write(message);
         if (data) {
             process.stdout.write(data);
@@ -146,7 +146,7 @@ class DualPrinter implements IConsolePrinter {
             process.stderr.write(error);
         }
 
-        // Stocker en mémoire (simule un fichier)
+        // Store in memory (simulates a file)
         let content = message;
         if (data) {
             content += data;
@@ -155,8 +155,8 @@ class DualPrinter implements IConsolePrinter {
             content += error;
         }
 
-        // Retirer les codes ANSI pour le stockage
-        const ansiEscape = '\u001b'; // Évite le contrôle character warning
+        // Remove ANSI codes for storage
+        const ansiEscape = '\u001b'; // Avoids control character warning
         const clean = content.replace(new RegExp(`${ansiEscape}\\[[0-9;]*m`, 'g'), '');
         this.logs.push(clean);
     }
@@ -168,28 +168,28 @@ class DualPrinter implements IConsolePrinter {
 
 const dualPrinter = new DualPrinter();
 
-// Injection directe (sans passer par le container)
+// Direct injection (without passing through the container)
 const dualAppender = new ConsoleAppender(
     LOGGER_SERVICE,
-    undefined, // Utilise le formatter par défaut du container
-    dualPrinter // Printer personnalisé
+    undefined, // Uses the default formatter from the container
+    dualPrinter // Custom Printer
 );
 
-console.log('✅ DualPrinter créé (écrit sur console + stocke en mémoire)');
-console.log('✅ ConsoleAppender créé avec DualPrinter');
+console.log('✅ DualPrinter created (writes to console + stores in memory)');
+console.log('✅ ConsoleAppender created with DualPrinter');
 console.log();
 
 LOGGER_SERVICE.addAppender(dualAppender);
 const logger3 = LOGGER_SERVICE.createLogger('Dual');
-logger3.debug('Ce message est dupliqué 📋');
+logger3.debug('This message is duplicated 📋');
 console.log();
-console.log(`📊 Logs stockés en mémoire: ${dualPrinter.getLogs().length} entrées`);
+console.log(`📊 Logs stored in memory: ${dualPrinter.getLogs().length} entries`);
 console.log();
 
 // ============================================================================
-// Exemple 4: Formatter JSON personnalisé
+// Example 4: Custom JSON Formatter
 // ============================================================================
-console.log('📊 Exemple 4: Formatter JSON personnalisé');
+console.log('📊 Example 4: Custom JSON Formatter');
 console.log('-'.repeat(80));
 
 class JSONFormatter implements IConsoleFormatter {
@@ -212,23 +212,23 @@ class JSONFormatter implements IConsoleFormatter {
     }
 }
 
-// Créer le formatter JSON avec le colorizer par défaut
+// Create the JSON formatter with the default colorizer
 const jsonFormatter = new JSONFormatter(globalContainer.resolve(CONSOLE_COLORIZED_TOKEN));
 const jsonAppender = new ConsoleAppender(LOGGER_SERVICE, jsonFormatter);
 
-console.log('✅ JSONFormatter créé avec colorizer du container global');
-console.log('✅ Format de sortie: JSON structuré');
+console.log('✅ JSONFormatter created with global container colorizer');
+console.log('✅ Output format: Structured JSON');
 console.log();
 
 LOGGER_SERVICE.addAppender(jsonAppender);
 const logger4 = LOGGER_SERVICE.createLogger('API');
-logger4.http('Requête API');
+logger4.http('API Request');
 console.log();
 
 // ============================================================================
-// Exemple 5: Container isolé pour tests
+// Example 5: Isolated Container for Tests
 // ============================================================================
-console.log('🧪 Exemple 5: Container isolé pour les tests');
+console.log('🧪 Example 5: Isolated Container for Tests');
 console.log('-'.repeat(80));
 
 class MockPrinter implements IConsolePrinter {
@@ -236,13 +236,13 @@ class MockPrinter implements IConsolePrinter {
 
     print(message: string, data: string | null, error: string | null): void {
         this.calls.push({ message, data, error });
-        // N'écrit PAS sur la console (pour les tests)
+        // Does NOT write to console (for tests)
     }
 }
 
 const testContainer = new DIContainer();
 
-// Enregistrer des mocks pour les tests
+// Register mocks for tests
 testContainer.register({
     token: CONSOLE_COLORIZED_TOKEN,
     useFactory: () => new ConsoleColorized(),
@@ -271,40 +271,40 @@ testContainer.register({
     singleton: true
 });
 
-// Créer un appender avec le container de test
+// Create an appender with the test container
 const testFormatter = testContainer.resolve(CONSOLE_FORMATTER_TOKEN);
 const testPrinter = testContainer.resolve(CONSOLE_PRINTER_TOKEN);
 const testAppender = new ConsoleAppender(LOGGER_SERVICE, testFormatter, testPrinter);
 
-console.log('✅ Container de test créé avec MockPrinter');
-console.log('✅ MockPrinter intercepte les logs sans les afficher');
+console.log('✅ Test container created with MockPrinter');
+console.log('✅ MockPrinter intercepts logs without displaying them');
 console.log();
 
-// Simulation d'un test
+// Test simulation
 LOGGER_SERVICE.addAppender(testAppender);
 const logger5 = LOGGER_SERVICE.createLogger('Test');
-logger5.error('Erreur de test (invisible)');
+logger5.error('Test error (invisible)');
 
-console.log(`📊 MockPrinter a capturé ${mockPrinter.calls.length} appels`);
-console.log(`   Premier appel: "${mockPrinter.calls[0]?.message.substring(0, 50)}..."`);
+console.log(`📊 MockPrinter captured ${mockPrinter.calls.length} calls`);
+console.log(`   First call: "${mockPrinter.calls[0]?.message.substring(0, 50)}..."`);
 console.log();
 
 // ============================================================================
-// Résumé
+// Summary
 // ============================================================================
 console.log('='.repeat(80));
-console.log('✨ Résumé des avantages du DI');
+console.log('✨ Summary of DI Benefits');
 console.log('='.repeat(80));
 console.log();
-console.log('✅ SOLID - Dependency Inversion Principle respecté');
-console.log('✅ Testabilité - Injection de mocks pour les tests');
-console.log('✅ Flexibilité - Substitution facile des implémentations');
-console.log('✅ Singleton - Partage d\'instances pour optimiser les performances');
-console.log('✅ Isolation - Containers séparés pour différents contextes');
-console.log('✅ Configuration - Changement de comportement sans modifier le code');
+console.log('✅ SOLID - Dependency Inversion Principle respected');
+console.log('✅ Testability - Injection of mocks for tests');
+console.log('✅ Flexibility - Easy substitution of implementations');
+console.log('✅ Singleton - Instance sharing to optimize performance');
+console.log('✅ Isolation - Separate containers for different contexts');
+console.log('✅ Configuration - Behavior change without modifying code');
 console.log();
-console.log('🎯 Score SOLID ConsoleAppender: 9.5/10 (avec DI)');
-console.log('   Avant DI: 8.0/10 (instanciations concrètes)');
-console.log('   Après DI: 9.5/10 (dépendances complètement inversées)');
+console.log('🎯 ConsoleAppender SOLID Score: 9.5/10 (with DI)');
+console.log('   Before DI: 8.0/10 (concrete instantiations)');
+console.log('   After DI: 9.5/10 (dependencies completely inverted)');
 console.log();
 console.log('='.repeat(80));
