@@ -47,12 +47,12 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@swc/core": "^1.15.2",
     "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.0.14",
     "simple-git-hooks": "^2.13.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vite-plugin-dts": "5.0.0-beta.6",
-    "vitest": "^2.1.8"
+    "vitest": "^4.0.14"
   }
 }
