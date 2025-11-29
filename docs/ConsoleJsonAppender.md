@@ -1,18 +1,18 @@
 # 📊 ConsoleJsonAppender
 
-## Vue d'ensemble
+## Overview
 
-Le `ConsoleJsonAppender` est un appender spécialisé qui formate les logs en **JSON structuré** pour faciliter le parsing et l'intégration avec les systèmes d'analyse de logs.
+The `ConsoleJsonAppender` is a specialized appender that formats logs into **structured JSON** to facilitate parsing and integration with log analysis systems.
 
 ---
 
-## 🎯 Cas d'Usage
+## 🎯 Use Cases
 
-- **Production** - Logs structurés pour agrégation et analyse
-- **CI/CD** - Parsing automatique des logs de build/test
-- **Monitoring** - Intégration avec ELK, Splunk, Datadog, etc.
-- **Debugging** - Format lisible avec toutes les métadonnées
-- **APIs** - Logs standardisés pour microservices
+- **Production** - Structured logs for aggregation and analysis
+- **CI/CD** - Automatic parsing of build/test logs
+- **Monitoring** - Integration with ELK, Splunk, Datadog, etc.
+- **Debugging** - Readable format with all metadata
+- **APIs** - Standardized logs for microservices
 
 ---
 
@@ -25,30 +25,30 @@ import { LOGGER_SERVICE } from '@ffs2/logger';
 
 ---
 
-## 🚀 Utilisation de Base
+## 🚀 Basic Usage
 
-### Exemple Simple
+### Simple Example
 
 ```typescript
 import { LOGGER_SERVICE, ConsoleJsonAppender } from '@ffs2/logger';
 
-// Créer un appender JSON
+// Create a JSON appender
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE);
 
-// Ajouter au service
+// Add to service
 LOGGER_SERVICE.addAppender(jsonAppender);
 
-// Utiliser comme d'habitude
+// Use as usual
 const logger = LOGGER_SERVICE.createLogger('MyApp');
-logger.info('Application démarrée');
+logger.info('Application started');
 ```
 
-**Sortie:**
+**Output:**
 ```json
 {
   "timestamp": "2025-11-19T12:00:00.000Z",
   "level": "INFO",
-  "message": "Application démarrée",
+  "message": "Application started",
   "context": "MyApp"
 }
 ```
@@ -57,28 +57,28 @@ logger.info('Application démarrée');
 
 ## ⚙️ Configuration
 
-### Mode Compact (Une Ligne)
+### Compact Mode (One Line)
 
 ```typescript
-// Pretty print (par défaut)
+// Pretty print (default)
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE);
 
-// Compact (une ligne)
+// Compact (one line)
 const compactAppender = new ConsoleJsonAppender(
     LOGGER_SERVICE,
-    undefined,  // formatter (optionnel)
-    undefined,  // printer (optionnel)
-    undefined,  // container (optionnel)
+    undefined,  // formatter (optional)
+    undefined,  // printer (optional)
+    undefined,  // container (optional)
     true        // compact = true
 );
 ```
 
-**Sortie compact:**
+**Compact output:**
 ```json
 {"timestamp":"2025-11-19T12:00:00.000Z","level":"INFO","message":"Message","context":"MyApp"}
 ```
 
-### Avec Colorisation
+### With Colorization
 
 ```typescript
 import { ConsoleColorized } from '@ffs2/logger';
@@ -88,13 +88,13 @@ const formatter = new ConsoleJsonFormatter(colorizer);
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE, formatter);
 ```
 
-### Avec DI Container Personnalisé
+### With Custom DI Container
 
 ```typescript
 import { DIContainer, InjectionToken } from '@ffs2/logger';
 
 const customContainer = new DIContainer();
-// ... configuration du container
+// ... container configuration
 
 const jsonAppender = new ConsoleJsonAppender(
     LOGGER_SERVICE,
@@ -106,26 +106,26 @@ const jsonAppender = new ConsoleJsonAppender(
 
 ---
 
-## 📋 Format JSON
+## 📋 JSON Format
 
-### Structure de Base
+### Basic Structure
 
 ```json
 {
   "timestamp": "2025-11-19T12:00:00.000Z",  // ISO 8601
   "level": "INFO",                          // UPPERCASE
-  "message": "Message de log",
-  "context": "MyContext"                    // Optionnel
+  "message": "Log message",
+  "context": "MyContext"                    // Optional
 }
 ```
 
-### Avec Données
+### With Data
 
 ```json
 {
   "timestamp": "2025-11-19T12:00:00.000Z",
   "level": "INFO",
-  "message": "Données utilisateur",
+  "message": "User data",
   "context": "UserService",
   "data": {
     "userId": 12345,
@@ -135,13 +135,13 @@ const jsonAppender = new ConsoleJsonAppender(
 }
 ```
 
-### Avec Erreur
+### With Error
 
 ```json
 {
   "timestamp": "2025-11-19T12:00:00.000Z",
   "level": "ERROR",
-  "message": "Erreur de connexion",
+  "message": "Connection error",
   "context": "Database",
   "error": {
     "message": "Connection timeout",
@@ -155,7 +155,7 @@ const jsonAppender = new ConsoleJsonAppender(
 
 ## 🔧 API
 
-### Constructeur
+### Constructor
 
 ```typescript
 constructor(
@@ -167,21 +167,21 @@ constructor(
 )
 ```
 
-**Paramètres:**
-- `service` - Service logger (requis)
-- `formatter` - Formatter personnalisé (optionnel, défaut: `ConsoleJsonFormatter`)
-- `printer` - Printer personnalisé (optionnel, défaut: `ConsolePrinter`)
-- `container` - Container DI (optionnel, défaut: `globalContainer`)
-- `compact` - Mode compact (optionnel, défaut: `false`)
+**Parameters:**
+- `service` - Logger service (required)
+- `formatter` - Custom formatter (optional, default: `ConsoleJsonFormatter`)
+- `printer` - Custom printer (optional, default: `ConsolePrinter`)
+- `container` - DI Container (optional, default: `globalContainer`)
+- `compact` - Compact mode (optional, default: `false`)
 
-### Méthodes (héritées de ILoggerAppender)
+### Methods (inherited from ILoggerAppender)
 
 ```typescript
-// Gestion du niveau de log
+// Log level management
 getLogLevel(): LogLevel
 setLogLevel(level: LogLevel): void
 
-// Ajout de logs
+// Adding logs
 append(events: LogEvent | LogEvent[]): Promise<void>
 
 // Lifecycle
@@ -197,86 +197,86 @@ getSymbolIdentifier(): symbol
 
 ## 🎨 ConsoleJsonFormatter
 
-Le formatter JSON utilisé par défaut.
+The default JSON formatter used.
 
-### Utilisation Standalone
+### Standalone Usage
 
 ```typescript
 import { ConsoleJsonFormatter } from '@ffs2/logger';
 
 const formatter = new ConsoleJsonFormatter(
-    colorizer?,  // IConsoleColorized (optionnel)
-    compact?     // boolean (optionnel, défaut: false)
+    colorizer?,  // IConsoleColorized (optional)
+    compact?     // boolean (optional, default: false)
 );
 
 const [message, data, error] = formatter.formatEvent(logEvent);
 ```
 
-### Caractéristiques
+### Features
 
-- ✅ Timestamp ISO 8601 automatique
-- ✅ Level en MAJUSCULES
-- ✅ Support des données complexes (objets, tableaux)
-- ✅ Capture complète des erreurs (message, stack, name)
-- ✅ Mode compact ou pretty print
-- ✅ Colorisation optionnelle
+- ✅ Automatic ISO 8601 Timestamp
+- ✅ UPPERCASE Level
+- ✅ Support for complex data (objects, arrays)
+- ✅ Full error capture (message, stack, name)
+- ✅ Compact mode or pretty print
+- ✅ Optional colorization
 
 ---
 
-## 💡 Exemples Avancés
+## 💡 Advanced Examples
 
 ### Multi-Appenders (Console + JSON)
 
 ```typescript
 import { ConsoleAppender, ConsoleJsonAppender } from '@ffs2/logger';
 
-// Console standard pour développement
+// Standard console for development
 const consoleAppender = new ConsoleAppender(LOGGER_SERVICE);
 
-// JSON pour production
+// JSON for production
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE, undefined, undefined, undefined, true);
 
-// Utiliser les deux
+// Use both
 LOGGER_SERVICE.addAppender(consoleAppender);
 LOGGER_SERVICE.addAppender(jsonAppender);
 
 const logger = LOGGER_SERVICE.createLogger('App');
-logger.info('Message visible dans les 2 formats');
+logger.info('Message visible in both formats');
 ```
 
-### Filtering par Niveau
+### Filtering by Level
 
 ```typescript
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE);
 
-// Seulement les erreurs et warnings en JSON
+// Only errors and warnings in JSON
 jsonAppender.setLogLevel('warn');
 
 LOGGER_SERVICE.addAppender(jsonAppender);
 
 const logger = LOGGER_SERVICE.createLogger('App');
-logger.debug('Pas dans JSON');    // Filtré
-logger.info('Pas dans JSON');     // Filtré
-logger.warn('Dans JSON');         // ✅ Affiché
-logger.error('Dans JSON');        // ✅ Affiché
+logger.debug('Not in JSON');    // Filtered
+logger.info('Not in JSON');     // Filtered
+logger.warn('In JSON');         // ✅ Displayed
+logger.error('In JSON');        // ✅ Displayed
 ```
 
-### Intégration avec ELK Stack
+### Integration with ELK Stack
 
 ```typescript
-// Configuration pour Logstash
+// Configuration for Logstash
 const jsonAppender = new ConsoleJsonAppender(
     LOGGER_SERVICE,
     undefined,
     undefined,
     undefined,
-    true  // Compact pour Logstash
+    true  // Compact for Logstash
 );
 
 jsonAppender.setLogLevel('info');
 LOGGER_SERVICE.addAppender(jsonAppender);
 
-// Les logs sont maintenant parsables par Logstash
+// Logs are now parsable by Logstash
 const logger = LOGGER_SERVICE.createLogger('API');
 logger.info('Request received', {
     method: 'POST',
@@ -289,7 +289,7 @@ logger.info('Request received', {
 
 ## 🧪 Tests
 
-### Mock Printer pour Tests
+### Mock Printer for Tests
 
 ```typescript
 import { ConsoleJsonAppender } from '@ffs2/logger';
@@ -302,7 +302,7 @@ class MockPrinter implements IConsolePrinter {
     }
 }
 
-// Dans vos tests
+// In your tests
 const mockPrinter = new MockPrinter();
 const jsonAppender = new ConsoleJsonAppender(
     LOGGER_SERVICE,
@@ -310,7 +310,7 @@ const jsonAppender = new ConsoleJsonAppender(
     mockPrinter
 );
 
-// Utiliser et vérifier
+// Use and verify
 const logger = LOGGER_SERVICE.createLogger('Test');
 logger.info('Test message');
 
@@ -322,26 +322,26 @@ expect(logData.level).toBe('INFO');
 
 ---
 
-## 📊 Comparaison avec ConsoleAppender
+## 📊 Comparison with ConsoleAppender
 
 | Aspect                  | ConsoleAppender | ConsoleJsonAppender |
 | ----------------------- | --------------- | ------------------- |
-| **Format**              | Texte formaté   | JSON structuré      |
-| **Lisibilité humaine**  | ✅ Excellente    | ⚠️ Moyenne           |
-| **Parsing automatique** | ❌ Difficile     | ✅ Facile            |
-| **Intégration logs**    | ⚠️ Limitée       | ✅ Excellente        |
-| **Colorisation**        | ✅ Oui           | ✅ Oui (optionnel)   |
-| **Performance**         | ✅ Rapide        | ✅ Rapide            |
-| **Taille**              | ✅ Compact       | ⚠️ Plus verbeux      |
+| **Format**              | Formatted text  | Structured JSON     |
+| **Human Readability**   | ✅ Excellent    | ⚠️ Average          |
+| **Automatic Parsing**   | ❌ Difficult    | ✅ Easy             |
+| **Log Integration**     | ⚠️ Limited      | ✅ Excellent        |
+| **Colorization**        | ✅ Yes          | ✅ Yes (optional)   |
+| **Performance**         | ✅ Fast         | ✅ Fast             |
+| **Size**                | ✅ Compact      | ⚠️ More verbose     |
 
 ---
 
 ## 🎯 Best Practices
 
-### Développement
+### Development
 
 ```typescript
-// Utiliser ConsoleAppender pour la lisibilité
+// Use ConsoleAppender for readability
 const devAppender = new ConsoleAppender(LOGGER_SERVICE);
 LOGGER_SERVICE.addAppender(devAppender);
 ```
@@ -349,7 +349,7 @@ LOGGER_SERVICE.addAppender(devAppender);
 ### Production
 
 ```typescript
-// Utiliser ConsoleJsonAppender compact pour l'agrégation
+// Use compact ConsoleJsonAppender for aggregation
 const prodAppender = new ConsoleJsonAppender(
     LOGGER_SERVICE,
     undefined,
@@ -357,11 +357,11 @@ const prodAppender = new ConsoleJsonAppender(
     undefined,
     true  // Compact
 );
-prodAppender.setLogLevel('info');  // Pas de debug en prod
+prodAppender.setLogLevel('info');  // No debug in prod
 LOGGER_SERVICE.addAppender(prodAppender);
 ```
 
-### Environnement Conditionnel
+### Conditional Environment
 
 ```typescript
 const appender = process.env.NODE_ENV === 'production'
@@ -373,23 +373,23 @@ LOGGER_SERVICE.addAppender(appender);
 
 ---
 
-## 🔗 Liens Utiles
+## 🔗 Useful Links
 
-- [Documentation DI](./DependencyInjection.md)
-- [Guide ConsoleAppender](./ConsoleAppender.md)
-- [Exemples](../examples/console-json-appender-demo.ts)
+- [DI Documentation](./DependencyInjection.md)
+- [ConsoleAppender Guide](./ConsoleAppender.md)
+- [Examples](../examples/console-json-appender-demo.ts)
 
 ---
 
-## ⚠️ Notes Importantes
+## ⚠️ Important Notes
 
-1. **Template Ignoré** - Le `ConsoleJsonFormatter` ignore les templates car le format JSON est fixe
-2. **Performance** - JSON.stringify peut être coûteux pour des objets très larges
-3. **Taille** - Les logs JSON sont plus volumineux que les logs texte
-4. **Colorisation** - La colorisation ajoute des caractères ANSI (à désactiver pour les fichiers)
+1. **Template Ignored** - `ConsoleJsonFormatter` ignores templates because JSON format is fixed
+2. **Performance** - JSON.stringify can be expensive for very large objects
+3. **Size** - JSON logs are larger than text logs
+4. **Colorization** - Colorization adds ANSI characters (disable for files)
 
 ---
 
 **Version:** 0.8.0-alpha2  
-**Mise à jour:** 2025-11-19  
-**Auteur:** ffs2-logger Team
+**Updated:** 2025-11-19  
+**Author:** ffs2-logger Team

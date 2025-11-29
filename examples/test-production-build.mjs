@@ -1,25 +1,25 @@
-// Test du build de production dist/index.js
-// Ce fichier importe depuis le build compilé au lieu des sources
+// Production build test dist/index.js
+// This file imports from the compiled build instead of sources
 
-import { LOGGER_SERVICE, ConsoleAppender, LOG_LEVEL } from '../dist/index.js';
+import { ConsoleAppender, LOG_LEVEL, LOGGER_SERVICE } from '../dist/index.js';
 
 const LOGGER = LOGGER_SERVICE.createLogger('LibTest', { logLevel: 'silly' });
 
 const consoleAppender = new ConsoleAppender(LOGGER_SERVICE);
 LOGGER_SERVICE.addAppender(consoleAppender);
 
-console.log('=== Test avec le build de production (dist/index.js) ===\n');
-console.log('Appenders actifs:', LOGGER_SERVICE.listAppenders());
+console.log('=== Test with production build (dist/index.js) ===\n');
+console.log('Active appenders:', LOGGER_SERVICE.listAppenders());
 console.log('');
 
-// Test de tous les niveaux de log
-console.log('=== Test 1: Tous les niveaux de log ===');
+// Test all log levels
+console.log('=== Test 1: All log levels ===');
 LOG_LEVEL.forEach(level => {
     LOGGER.sendEvent({ message: `Testing log level: ${level}`, level, context: 'Initial' });
 });
 
-// Changement du niveau de log du service
-console.log('\n=== Test 2: Changement niveau LoggerService à "warn" ===');
+// Change LoggerService log level
+console.log('\n=== Test 2: Change LoggerService level to "warn" ===');
 LOGGER_SERVICE.setLogLevel('warn');
 console.log(`LoggerService log level: ${LOGGER_SERVICE.getLogLevel()}\n`);
 
@@ -27,8 +27,8 @@ LOG_LEVEL.forEach(level => {
     LOGGER.sendEvent({ message: `Testing log level after change: ${level}`, level, context: 'AfterChange' });
 });
 
-// Remise à silly
-console.log('\n=== Test 3: Remise à "silly" ===');
+// Reset to silly
+console.log('\n=== Test 3: Reset to "silly" ===');
 LOGGER_SERVICE.setLogLevel('silly');
 console.log(`LoggerService log level: ${LOGGER_SERVICE.getLogLevel()}\n`);
 
@@ -40,8 +40,8 @@ LOG_LEVEL.forEach(level => {
     });
 });
 
-// Changement du niveau de l'appender
-console.log('\n=== Test 4: Changement niveau ConsoleAppender à "error" ===');
+// Change appender level
+console.log('\n=== Test 4: Change ConsoleAppender level to "error" ===');
 consoleAppender.setLogLevel('error');
 console.log(`ConsoleAppender log level: ${consoleAppender.getLogLevel()}\n`);
 
@@ -53,15 +53,15 @@ LOG_LEVEL.forEach(level => {
     });
 });
 
-// Test avec données complexes
-console.log('\n=== Test 5: Logs avec données complexes ===');
+// Test with complex data
+console.log('\n=== Test 5: Logs with complex data ===');
 LOGGER_SERVICE.setLogLevel('info');
 consoleAppender.setLogLevel('info');
 
 LOGGER.info('Simple message');
-LOGGER.info({ message: 'Message avec data', data: { userId: 123, action: 'login' } });
-LOGGER.error(new Error('Test error avec stack trace'));
-LOGGER.warn({ message: 'Warning avec contexte', context: 'Security', data: { ip: '192.168.1.1' } });
+LOGGER.info({ message: 'Message with data', data: { userId: 123, action: 'login' } });
+LOGGER.error(new Error('Test error with stack trace'));
+LOGGER.warn({ message: 'Warning with context', context: 'Security', data: { ip: '192.168.1.1' } });
 
-console.log('\n=== Test terminé avec succès ===');
-console.log('Le build de production (dist/index.js) fonctionne correctement! ✅');
+console.log('\n=== Test completed successfully ===');
+console.log('Production build (dist/index.js) works correctly! ✅');

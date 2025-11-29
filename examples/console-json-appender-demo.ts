@@ -1,19 +1,19 @@
 /**
- * Démonstration du ConsoleJsonAppender
+ * ConsoleJsonAppender Demonstration
  */
 
-import { LOGGER_SERVICE } from '../src/index';
 import { ConsoleJsonAppender } from '../src/appenders/console/ConsoleJsonAppender';
+import { LOGGER_SERVICE } from '../src/index';
 
 console.log('='.repeat(80));
-console.log('📊 Démonstration ConsoleJsonAppender');
+console.log('📊 ConsoleJsonAppender Demonstration');
 console.log('='.repeat(80));
 console.log();
 
 // ============================================================================
-// Exemple 1: JSON Formatter Standard (Pretty Print)
+// Example 1: Standard JSON Formatter (Pretty Print)
 // ============================================================================
-console.log('📋 Exemple 1: Format JSON standard (pretty print)');
+console.log('📋 Example 1: Standard JSON format (pretty print)');
 console.log('-'.repeat(80));
 
 const jsonAppender = new ConsoleJsonAppender(LOGGER_SERVICE);
@@ -22,16 +22,16 @@ LOGGER_SERVICE.addAppender(jsonAppender);
 
 const logger1 = LOGGER_SERVICE.createLogger('JsonDemo');
 
-logger1.info('Message d\'information simple');
-logger1.warn('Attention: quelque chose d\'important');
-logger1.error('Une erreur s\'est produite');
+logger1.info('Simple information message');
+logger1.warn('Warning: something important');
+logger1.error('An error occurred');
 
 console.log();
 
 // ============================================================================
-// Exemple 2: JSON Compact (Une ligne)
+// Example 2: Compact JSON (One line)
 // ============================================================================
-console.log('📦 Exemple 2: Format JSON compact (une ligne)');
+console.log('📦 Example 2: Compact JSON format (one line)');
 console.log('-'.repeat(80));
 
 const compactAppender = new ConsoleJsonAppender(LOGGER_SERVICE, undefined, undefined, undefined, true);
@@ -40,81 +40,81 @@ LOGGER_SERVICE.addAppender(compactAppender);
 
 const logger2 = LOGGER_SERVICE.createLogger('CompactJson');
 
-logger2.info('Message compact');
-logger2.debug('Debug en format compact');
+logger2.info('Compact message');
+logger2.debug('Debug in compact format');
 
 console.log();
 
 // ============================================================================
-// Exemple 3: JSON avec données complexes
+// Example 3: JSON with complex data
 // ============================================================================
-console.log('🔍 Exemple 3: JSON avec données complexes');
+console.log('🔍 Example 3: JSON with complex data');
 console.log('-'.repeat(80));
 
 const logger3 = LOGGER_SERVICE.createLogger('ComplexData');
 
-// Log avec données
-logger3.log('Données utilisateur');
+// Log with data
+logger3.log('User data');
 
-// Log avec erreur
+// Log with error
 try {
-    throw new Error('Erreur de test avec stack trace');
+    throw new Error('Test error with stack trace');
 } catch (error) {
-    logger3.error('Erreur capturée');
+    logger3.error('Error captured');
 }
 
 console.log();
 
 // ============================================================================
-// Exemple 4: Comparaison des formats
+// Example 4: Format comparison
 // ============================================================================
-console.log('⚖️ Exemple 4: Différents niveaux de log en JSON');
+console.log('⚖️ Example 4: Different log levels in JSON');
 console.log('-'.repeat(80));
 
 const logger4 = LOGGER_SERVICE.createLogger('AllLevels');
 
-logger4.fatal('Erreur fatale système');
-logger4.error('Erreur application');
-logger4.warn('Avertissement');
+logger4.fatal('Fatal system error');
+logger4.error('Application error');
+logger4.warn('Warning');
 logger4.info('Information');
-logger4.http('Requête HTTP');
+logger4.http('HTTP Request');
 logger4.debug('Debug info');
-logger4.trace('Trace détaillée');
+logger4.trace('Detailed trace');
 
 console.log();
 
 
 // ============================================================================
-// Exemple 4: Comparaison des formats
+// Example 5: Format comparison
 // ============================================================================
-console.log('⚖️ Exemple 5: Différents niveaux de log en JSON');
+console.log('⚖️ Example 5: Different log levels in JSON');
 console.log('-'.repeat(80));
 
 const logger5 = LOGGER_SERVICE.createLogger('AllLevels');
 
-logger5.fatal(new Error('Erreur fatale système'));
+logger5.fatal(new Error('Fatal system error'));
 logger5.data({ user: 'alice', action: 'login', success: true });
 
 console.log();
 
 // ============================================================================
-// Résumé
+// Summary
 // ============================================================================
 console.log('='.repeat(80));
-console.log('✨ Résumé ConsoleJsonAppender');
+console.log('✨ ConsoleJsonAppender Summary');
 console.log('='.repeat(80));
 console.log();
-console.log('✅ Format JSON structuré pour parsing facile');
-console.log('✅ Support des données complexes (objets, tableaux)');
-console.log('✅ Capture complète des erreurs (message, stack, name)');
-console.log('✅ Timestamp ISO 8601 automatique');
-console.log('✅ Mode compact ou pretty print');
-console.log('✅ Compatible avec les outils d\'analyse de logs (ELK, Splunk, etc.)');
+console.log('✅ Structured JSON format for easy parsing');
+console.log('✅ Support for complex data (objects, arrays)');
+console.log('✅ Full error capture (message, stack, name)');
+console.log('✅ Automatic ISO 8601 Timestamp');
+console.log('✅ Compact mode or pretty print');
+console.log('✅ Compatible with log analysis tools (ELK, Splunk, etc.)');
 console.log();
-console.log('🎯 Cas d\'usage:');
-console.log('   - Production: logs structurés pour agrégation');
-console.log('   - CI/CD: parsing automatique des logs');
-console.log('   - Monitoring: intégration avec outils de surveillance');
-console.log('   - Debugging: format lisible avec données complètes');
+console.log('🎯 Use cases:');
+console.log('   - Production: structured logs for aggregation');
+console.log('   - CI/CD: automatic log parsing');
+console.log('   - Monitoring: integration with monitoring tools');
+console.log('   - Debugging: readable format with complete data');
 console.log();
 console.log('='.repeat(80));

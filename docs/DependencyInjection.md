@@ -1,42 +1,42 @@
-# 🔧 Système de Dependency Injection (DI)
+# 🔧 Dependency Injection (DI) System
 
-## 📋 Vue d'ensemble
+## 📋 Overview
 
-Le système de **Dependency Injection** (DI) de `ffs2-logger` permet de gérer les dépendances de manière découplée, respectant le principe **Dependency Inversion** de SOLID.
+The **Dependency Injection** (DI) system of `ffs2-logger` allows managing dependencies in a decoupled way, respecting the **Dependency Inversion** principle of SOLID.
 
-### ✨ Avantages
+### ✨ Benefits
 
-- ✅ **SOLID** - Respect total du principe Dependency Inversion (DIP)
-- ✅ **Testabilité** - Injection facile de mocks pour les tests
-- ✅ **Flexibilité** - Substitution des implémentations sans modifier le code
-- ✅ **Performance** - Gestion des singletons pour optimiser la mémoire
-- ✅ **Isolation** - Containers séparés pour différents contextes
-- ✅ **Type-safe** - Sécurité de type complète avec TypeScript
+- ✅ **SOLID** - Full respect of the Dependency Inversion Principle (DIP)
+- ✅ **Testability** - Easy injection of mocks for tests
+- ✅ **Flexibility** - Substitution of implementations without modifying the code
+- ✅ **Performance** - Singleton management to optimize memory
+- ✅ **Isolation** - Separate containers for different contexts
+- ✅ **Type-safe** - Full type safety with TypeScript
 
 ---
 
 ## 🏗️ Architecture
 
-### Composants principaux
+### Main Components
 
 ```
 src/
 ├── interfaces/di/
-│   ├── InjectionToken.ts      # Tokens d'identification des services
-│   └── IDIContainer.ts         # Interface du conteneur DI
+│   ├── InjectionToken.ts      # Service identification tokens
+│   └── IDIContainer.ts         # DI Container Interface
 ├── services/
-│   └── DIContainer.ts          # Implémentation du conteneur
+│   └── DIContainer.ts          # Container implementation
 ├── constants/
-│   └── DITokens.ts             # Tokens prédéfinis pour ConsoleAppender
+│   └── DITokens.ts             # Predefined tokens for ConsoleAppender
 └── config/
-    └── DIConfig.ts             # Configuration globale du container
+    └── DIConfig.ts             # Global container configuration
 ```
 
 ---
 
-## 📦 Utilisation de base
+## 📦 Basic Usage
 
-### 1. Import des dépendances
+### 1. Import Dependencies
 
 ```typescript
 import {
@@ -49,22 +49,22 @@ import {
 } from '@ffs2/logger';
 ```
 
-### 2. Utilisation avec le container global (par défaut)
+### 2. Usage with Global Container (Default)
 
 ```typescript
 import { LOGGER_SERVICE, ConsoleAppender } from '@ffs2/logger';
 
-// Le ConsoleAppender utilise automatiquement le container global
+// ConsoleAppender automatically uses the global container
 const appender = new ConsoleAppender(LOGGER_SERVICE);
 
-// Toutes les dépendances sont résolues automatiquement:
+// All dependencies are automatically resolved:
 // - ConsoleFormatter (singleton)
 // - ConsolePrinter (singleton)  
 // - ConsoleColorized (singleton)
 // - TemplateProvider (singleton)
 ```
 
-### 3. Injection manuelle
+### 3. Manual Injection
 
 ```typescript
 import { 
@@ -74,32 +74,32 @@ import {
     ConsolePrinter
 } from '@ffs2/logger';
 
-// Créer les dépendances manuellement
+// Create dependencies manually
 const formatter = new ConsoleFormatter();
 const printer = new ConsolePrinter();
 
-// Injecter dans le constructeur
+// Inject into constructor
 const appender = new ConsoleAppender(LOGGER_SERVICE, formatter, printer);
 ```
 
 ---
 
-## 🎨 Personnalisation
+## 🎨 Customization
 
-### Créer un colorizer personnalisé
+### Create a Custom Colorizer
 
 ```typescript
 import type { IConsoleColorized, LogLevel } from '@ffs2/logger';
 
 class RainbowColorizer implements IConsoleColorized {
     colorize(message: string, logLevel: LogLevel): string {
-        // Votre logique de colorisation
+        // Your colorization logic
         return `\x1b[35m${message}\x1b[0m`; // Magenta
     }
 }
 ```
 
-### Enregistrer dans un container personnalisé
+### Register in a Custom Container
 
 ```typescript
 import { 
@@ -109,20 +109,20 @@ import {
     TEMPLATE_PROVIDER_TOKEN
 } from '@ffs2/logger';
 
-// Créer un nouveau container
+// Create a new container
 const customContainer = new DIContainer();
 
-// Créer un token pour le colorizer
+// Create a token for the colorizer
 const RAINBOW_TOKEN = new InjectionToken<IConsoleColorized>('RainbowColorizer');
 
-// Enregistrer le service
+// Register the service
 customContainer.register({
     token: RAINBOW_TOKEN,
     useFactory: () => new RainbowColorizer(),
-    singleton: true  // Une seule instance partagée
+    singleton: true  // One shared instance
 });
 
-// Enregistrer un formatter utilisant le colorizer personnalisé
+// Register a formatter using the custom colorizer
 customContainer.register({
     token: CONSOLE_FORMATTER_TOKEN,
     useFactory: () => new ConsoleFormatter(
@@ -132,16 +132,16 @@ customContainer.register({
     singleton: true
 });
 
-// Utiliser le formatter
+// Use the formatter
 const customFormatter = customContainer.resolve(CONSOLE_FORMATTER_TOKEN);
 const appender = new ConsoleAppender(LOGGER_SERVICE, customFormatter);
 ```
 
 ---
 
-## 🧪 Tests unitaires
+## 🧪 Unit Tests
 
-### Mock Printer pour les tests
+### Mock Printer for Tests
 
 ```typescript
 import type { IConsolePrinter } from '@ffs2/logger';
@@ -150,24 +150,24 @@ class MockPrinter implements IConsolePrinter {
     public calls: Array<{ message: string; data: string | null; error: string | null }> = [];
     
     print(message: string, data: string | null, error: string | null): void {
-        // Capturer les appels au lieu d'écrire sur la console
+        // Capture calls instead of writing to console
         this.calls.push({ message, data, error });
     }
 }
 
-// Dans vos tests
+// In your tests
 const mockPrinter = new MockPrinter();
 const appender = new ConsoleAppender(LOGGER_SERVICE, undefined, mockPrinter);
 
-// Utiliser l'appender
+// Use the appender
 await appender.append({ level: 'info', message: 'Test', timestamp: Date.now() });
 
-// Vérifier les appels
+// Verify calls
 expect(mockPrinter.calls).toHaveLength(1);
 expect(mockPrinter.calls[0].message).toContain('Test');
 ```
 
-### Container de test isolé
+### Isolated Test Container
 
 ```typescript
 import { DIContainer } from '@ffs2/logger';
@@ -180,18 +180,18 @@ describe('ConsoleAppender', () => {
         testContainer = new DIContainer();
         mockPrinter = new MockPrinter();
         
-        // Configurer le container de test
+        // Configure test container
         testContainer.register({
             token: CONSOLE_PRINTER_TOKEN,
             useFactory: () => mockPrinter,
             singleton: true
         });
         
-        // ... autres registrations
+        // ... other registrations
     });
     
     afterEach(() => {
-        testContainer.clear(); // Nettoyer le container
+        testContainer.clear(); // Clean up container
     });
     
     it('should log message', () => {
@@ -206,23 +206,23 @@ describe('ConsoleAppender', () => {
 
 ---
 
-## 🔑 API du DIContainer
+## 🔑 DIContainer API
 
 ### `register<T>(provider: Provider<T>): void`
 
-Enregistre un provider dans le conteneur.
+Registers a provider in the container.
 
 ```typescript
 container.register({
     token: MY_TOKEN,
     useFactory: () => new MyService(),
-    singleton: true  // optionnel, false par défaut
+    singleton: true  // optional, default false
 });
 ```
 
 ### `resolve<T>(token: Token<T>): T`
 
-Résout une dépendance depuis le conteneur.
+Resolves a dependency from the container.
 
 ```typescript
 const service = container.resolve(MY_TOKEN);
@@ -230,17 +230,17 @@ const service = container.resolve(MY_TOKEN);
 
 ### `has<T>(token: Token<T>): boolean`
 
-Vérifie si un service est enregistré.
+Checks if a service is registered.
 
 ```typescript
 if (container.has(MY_TOKEN)) {
-    // Le service est disponible
+    // Service is available
 }
 ```
 
 ### `unregister<T>(token: Token<T>): void`
 
-Supprime un service du conteneur.
+Removes a service from the container.
 
 ```typescript
 container.unregister(MY_TOKEN);
@@ -248,7 +248,7 @@ container.unregister(MY_TOKEN);
 
 ### `clear(): void`
 
-Réinitialise complètement le conteneur (supprime tous les services).
+Completely resets the container (removes all services).
 
 ```typescript
 container.clear();
@@ -256,9 +256,9 @@ container.clear();
 
 ---
 
-## 🎯 Tokens prédéfinis
+## 🎯 Predefined Tokens
 
-Le package exporte ces tokens pour ConsoleAppender :
+The package exports these tokens for ConsoleAppender:
 
 ```typescript
 import {
@@ -271,30 +271,30 @@ import {
 
 ---
 
-## ⚙️ Configuration avancée
+## ⚙️ Advanced Configuration
 
 ### Singleton vs Transient
 
 ```typescript
-// Singleton - Une seule instance partagée
+// Singleton - One shared instance
 container.register({
     token: MY_TOKEN,
     useFactory: () => new MyService(),
     singleton: true
 });
 
-// Transient - Nouvelle instance à chaque résolution
+// Transient - New instance on each resolution
 container.register({
     token: MY_TOKEN,
     useFactory: () => new MyService(),
-    singleton: false  // ou omis
+    singleton: false  // or omitted
 });
 ```
 
-### Dépendances entre services
+### Dependencies between Services
 
 ```typescript
-// Service A dépend de Service B
+// Service A depends on Service B
 container.register({
     token: TOKEN_B,
     useFactory: () => new ServiceB(),
@@ -304,16 +304,16 @@ container.register({
 container.register({
     token: TOKEN_A,
     useFactory: () => new ServiceA(
-        container.resolve(TOKEN_B)  // Résolution de la dépendance
+        container.resolve(TOKEN_B)  // Dependency resolution
     ),
     singleton: true
 });
 ```
 
-### Containers hiérarchiques
+### Hierarchical Containers
 
 ```typescript
-// Container parent (configuration globale)
+// Parent container (global configuration)
 const parentContainer = new DIContainer();
 parentContainer.register({
     token: SHARED_TOKEN,
@@ -321,12 +321,12 @@ parentContainer.register({
     singleton: true
 });
 
-// Container enfant (configuration locale)
+// Child container (local configuration)
 const childContainer = new DIContainer();
 childContainer.register({
     token: LOCAL_TOKEN,
     useFactory: () => new LocalService(
-        parentContainer.resolve(SHARED_TOKEN)  // Utilise le parent
+        parentContainer.resolve(SHARED_TOKEN)  // Uses parent
     ),
     singleton: true
 });
@@ -334,26 +334,26 @@ childContainer.register({
 
 ---
 
-## 📊 Impact sur SOLID
+## 📊 Impact on SOLID
 
-### Avant DI (Score: 8.0/10)
+### Before DI (Score: 8.0/10)
 
 ```typescript
 class ConsoleAppender {
     constructor(
         service: ILoggerService,
-        formatter: IConsoleFormatter = new ConsoleFormatter(),  // ❌ Instanciation concrète
-        printer: IConsolePrinter = new ConsolePrinter()          // ❌ Instanciation concrète
+        formatter: IConsoleFormatter = new ConsoleFormatter(),  // ❌ Concrete instantiation
+        printer: IConsolePrinter = new ConsolePrinter()          // ❌ Concrete instantiation
     ) {}
 }
 ```
 
-**Problèmes:**
-- ❌ Dépendances concrètes dans les valeurs par défaut
-- ❌ Couplage fort aux implémentations
-- ❌ Tests difficiles (hard-coded dependencies)
+**Issues:**
+- ❌ Concrete dependencies in default values
+- ❌ Strong coupling to implementations
+- ❌ Difficult tests (hard-coded dependencies)
 
-### Après DI (Score: 9.5/10)
+### After DI (Score: 9.5/10)
 
 ```typescript
 class ConsoleAppender {
@@ -362,55 +362,55 @@ class ConsoleAppender {
         formatter?: IConsoleFormatter,
         printer?: IConsolePrinter
     ) {
-        // ✅ Résolution via le container
+        // ✅ Resolution via container
         this.formatter = formatter ?? globalContainer.resolve(CONSOLE_FORMATTER_TOKEN);
         this.printer = printer ?? globalContainer.resolve(CONSOLE_PRINTER_TOKEN);
     }
 }
 ```
 
-**Avantages:**
-- ✅ Dépendances abstraites uniquement
-- ✅ Couplage faible
-- ✅ Tests faciles (injection de mocks)
-- ✅ Extensibilité maximale
+**Benefits:**
+- ✅ Abstract dependencies only
+- ✅ Loose coupling
+- ✅ Easy tests (mock injection)
+- ✅ Maximum extensibility
 
 ---
 
-## 🔗 Liens utiles
+## 🔗 Useful Links
 
-- [Documentation SOLID](./SOLID.md)
-- [Guide ConsoleAppender](./ConsoleAppender.md)
-- [Exemples complets](../examples/di-usage-demo.ts)
-
----
-
-## 💡 Bonnes pratiques
-
-1. ✅ **Toujours définir des interfaces** pour vos services
-2. ✅ **Utiliser des tokens typés** (`InjectionToken<T>`)
-3. ✅ **Préférer les singletons** pour les services sans état
-4. ✅ **Isoler les containers** dans les tests
-5. ✅ **Documenter les dépendances** dans les constructeurs
-6. ✅ **Nettoyer les containers** après les tests (`clear()`)
-7. ⚠️ **Éviter les dépendances circulaires**
-8. ⚠️ **Ne pas stocker d'état** dans les services singleton si partagés
+- [SOLID Documentation](./SOLID.md)
+- [ConsoleAppender Guide](./ConsoleAppender.md)
+- [Full Examples](../examples/di-usage-demo.ts)
 
 ---
 
-## 🎓 Exemple complet
+## 💡 Best Practices
 
-Voir [`examples/di-usage-demo.ts`](../examples/di-usage-demo.ts) pour une démonstration complète incluant:
-
-- Utilisation standard avec le container global
-- Création de colorizers personnalisés
-- Formatters JSON
-- Printers multi-destination
-- Containers de test isolés
-- Mocking pour les tests unitaires
+1. ✅ **Always define interfaces** for your services
+2. ✅ **Use typed tokens** (`InjectionToken<T>`)
+3. ✅ **Prefer singletons** for stateless services
+4. ✅ **Isolate containers** in tests
+5. ✅ **Document dependencies** in constructors
+6. ✅ **Clean up containers** after tests (`clear()`)
+7. ⚠️ **Avoid circular dependencies**
+8. ⚠️ **Do not store state** in singleton services if shared
 
 ---
 
-**Mise à jour:** 2025-11-18  
+## 🎓 Complete Example
+
+See [`examples/di-usage-demo.ts`](../examples/di-usage-demo.ts) for a complete demonstration including:
+
+- Standard usage with global container
+- Creating custom colorizers
+- JSON formatters
+- Multi-destination printers
+- Isolated test containers
+- Mocking for unit tests
+
+---
+
+**Updated:** 2025-11-18  
 **Version:** 0.8.0-alpha2  
-**Auteur:** ffs2-logger Team
+**Author:** ffs2-logger Team

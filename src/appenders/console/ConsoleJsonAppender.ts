@@ -10,8 +10,8 @@ import type { LogEvent } from '../../types/LogEvent';
 import type { LogLevel } from '../../types/LogLevel';
 
 /**
- * Appender console avec formatage JSON
- * Hérite de ConsoleAppender mais utilise un formatter JSON par défaut
+ * Console appender with JSON formatting
+ * Inherits from ConsoleAppender but uses a default JSON formatter
  */
 export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
     private level: LogLevel = 'silly';
@@ -61,9 +61,9 @@ export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
         });
     }
 
-    initialize(): void {}
+    initialize(): void { }
 
-    destroy(): void {}
+    destroy(): void { }
 
     isInitialized(): boolean {
         return true;

@@ -1,6 +1,6 @@
 import { ConsoleAppender } from './appenders/console/ConsoleAppender';
+import './config/DIConfig'; // Initialize DI container
 import { LoggerService } from './services/LoggerService';
-import './config/DIConfig'; // Initialise le DI container
 
 export * from './appenders/base/AAsyncBatchAppender';
 // Console appender exports

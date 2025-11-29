@@ -3,8 +3,8 @@ import type { ILogger } from '../interfaces/ILogger';
 import type { LogMessage } from '../types/LogMessage';
 
 /**
- * Interface LoggerService de NestJS
- * Réplique l'interface officielle pour éviter la dépendance à @nestjs/common
+ * NestJS LoggerService Interface
+ * Replicates the official interface to avoid dependency on @nestjs/common
  */
 export interface LoggerService {
     log(message: any, ...optionalParams: any[]): any;
@@ -16,48 +16,48 @@ export interface LoggerService {
 }
 
 /**
- * Wrapper pour intégrer un Logger FFS2 avec l'interface LoggerService de NestJS
- * Permet d'utiliser le système de logging FFS2 dans une application NestJS
+ * Wrapper to integrate a FFS2 Logger with the NestJS LoggerService interface
+ * Allows using the FFS2 logging system in a NestJS application
  */
 export class NestJSLoggerWrapper implements LoggerService {
     /**
-     * @param logger - Instance du logger FFS2 à wrapper
-     * @param context - Contexte optionnel pour tous les logs (ex: nom du module)
+     * @param logger - FFS2 logger instance to wrap
+     * @param context - Optional context for all logs (e.g., module name)
      */
     constructor(
         private readonly logger: ILogger,
         private context?: string
-    ) {}
+    ) { }
 
     /**
-     * Définit ou modifie le contexte du logger
-     * @param context - Nouveau contexte à utiliser
+     * Sets or modifies the logger context
+     * @param context - New context to use
      */
     setContext(context: string): void {
         this.context = context;
     }
 
     /**
-     * Obtient le contexte actuel du logger
+     * Gets the current logger context
      */
     getContext(): string | undefined {
         return this.context;
     }
 
     /**
-     * Log de niveau info (méthode principale de NestJS)
-     * @param message - Message à logger
-     * @param context - Contexte optionnel qui override le contexte par défaut
+     * Info level log (main NestJS method)
+     * @param message - Message to log
+     * @param context - Optional context that overrides the default context
      */
     log(message: LogMessage, context?: string): void {
         this.logger.info(this.formatMessage(message, context));
     }
 
     /**
-     * Log d'erreur
-     * @param message - Message d'erreur
-     * @param trace - Stack trace optionnelle
-     * @param context - Contexte optionnel
+     * Error log
+     * @param message - Error message
+     * @param trace - Optional stack trace
+     * @param context - Optional context
      */
     error(message: LogMessage, trace?: string, context?: string): void {
         const formattedMessage = this.formatMessage(message, context);
@@ -73,46 +73,46 @@ export class NestJSLoggerWrapper implements LoggerService {
     }
 
     /**
-     * Log de warning
-     * @param message - Message d'avertissement
-     * @param context - Contexte optionnel
+     * Warning log
+     * @param message - Warning message
+     * @param context - Optional context
      */
     warn(message: LogMessage, context?: string): void {
         this.logger.warn(this.formatMessage(message, context));
     }
 
     /**
-     * Log de debug
-     * @param message - Message de debug
-     * @param context - Contexte optionnel
+     * Debug log
+     * @param message - Debug message
+     * @param context - Optional context
      */
     debug(message: LogMessage, context?: string): void {
         this.logger.debug(this.formatMessage(message, context));
     }
 
     /**
-     * Log verbose
-     * @param message - Message verbose
-     * @param context - Contexte optionnel
+     * Verbose log
+     * @param message - Verbose message
+     * @param context - Optional context
      */
     verbose(message: LogMessage, context?: string): void {
         this.logger.verbose(this.formatMessage(message, context));
     }
 
     /**
-     * Log fatal (extension de l'interface standard NestJS)
-     * @param message - Message fatal
-     * @param context - Contexte optionnel
+     * Fatal log (extension of the standard NestJS interface)
+     * @param message - Fatal message
+     * @param context - Optional context
      */
     fatal(message: LogMessage, context?: string): void {
         this.logger.fatal(this.formatMessage(message, context));
     }
 
     /**
-     * Formate le message en ajoutant le contexte si nécessaire
-     * @param message - Message original
-     * @param context - Contexte spécifique ou utilise le contexte par défaut
-     * @returns Message formaté avec contexte
+     * Formats the message by adding the context if necessary
+     * @param message - Original message
+     * @param context - Specific context or uses the default context
+     * @returns Formatted message with context
      */
     private formatMessage(message: LogMessage, context?: string): LogMessage {
         const finalContext = context || this.context;
@@ -121,12 +121,12 @@ export class NestJSLoggerWrapper implements LoggerService {
             return message;
         }
 
-        // Si le message est une string, ajouter le contexte en préfixe
+        // If the message is a string, add the context as a prefix
         if (typeof message === 'string') {
             return `[${finalContext}] ${message}`;
         }
 
-        // Si le message est un objet, ajouter le contexte en propriété
+        // If the message is an object, add the context as a property
         if (typeof message === 'object' && message !== null) {
             return {
                 ...message,

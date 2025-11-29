@@ -2,74 +2,74 @@ import { LOGGER_SERVICE } from '../src/index';
 import { NestJSLoggerWrapper } from '../src/wrappers/NestJSLoggerWrapper';
 
 /**
- * Exemple d'utilisation du NestJSLoggerWrapper
- * Montre comment intégrer le logger FFS2 avec NestJS
+ * NestJSLoggerWrapper Usage Example
+ * Shows how to integrate the FFS2 logger with NestJS
  */
 
-console.log('=== Exemple 1: Utilisation basique ===\n');
+console.log('=== Example 1: Basic Usage ===\n');
 {
-    // Créer un logger FFS2
+    // Create an FFS2 logger
     const ffs2Logger = LOGGER_SERVICE.createLogger('MyApp');
 
-    // Wrapper pour NestJS
+    // Wrapper for NestJS
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger);
 
-    // Utiliser comme un logger NestJS standard
-    nestLogger.log('Application démarrée');
-    nestLogger.error('Une erreur est survenue');
-    nestLogger.warn('Attention: limite de mémoire atteinte');
+    // Use as a standard NestJS logger
+    nestLogger.log('Application started');
+    nestLogger.error('An error occurred');
+    nestLogger.warn('Warning: memory limit reached');
     nestLogger.debug('Variable x = 42');
-    nestLogger.verbose('Détails de la requête');
+    nestLogger.verbose('Request details');
 }
 
-console.log('\n=== Exemple 2: Avec contexte par défaut ===\n');
+console.log('\n=== Example 2: With default context ===\n');
 {
     const ffs2Logger = LOGGER_SERVICE.createLogger('Auth');
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger, 'AuthService');
 
-    nestLogger.log('Utilisateur connecté');
-    nestLogger.warn('Tentative de connexion échouée');
-    nestLogger.error('Token invalide');
+    nestLogger.log('User connected');
+    nestLogger.warn('Failed login attempt');
+    nestLogger.error('Invalid token');
 }
 
-console.log('\n=== Exemple 3: Override du contexte ===\n');
+console.log('\n=== Example 3: Context Override ===\n');
 {
     const ffs2Logger = LOGGER_SERVICE.createLogger('API');
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger, 'DefaultContext');
 
-    nestLogger.log('Message avec contexte par défaut');
-    nestLogger.log('Message avec contexte override', 'CustomContext');
+    nestLogger.log('Message with default context');
+    nestLogger.log('Message with context override', 'CustomContext');
 
-    // Changer le contexte par défaut
+    // Change default context
     nestLogger.setContext('NewContext');
-    nestLogger.log('Message avec nouveau contexte');
+    nestLogger.log('Message with new context');
 }
 
-console.log('\n=== Exemple 4: Erreur avec stack trace ===\n');
+console.log('\n=== Example 4: Error with stack trace ===\n');
 {
     const ffs2Logger = LOGGER_SERVICE.createLogger('ErrorHandler');
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger, 'AppModule');
 
     try {
-        throw new Error('Erreur de test');
+        throw new Error('Test error');
     } catch (error) {
         const err = error as Error;
         nestLogger.error(
-            'Une erreur critique est survenue',
+            'A critical error occurred',
             err.stack,
             'ErrorBoundary'
         );
     }
 }
 
-console.log('\n=== Exemple 5: Messages complexes ===\n');
+console.log('\n=== Example 5: Complex Messages ===\n');
 {
     const ffs2Logger = LOGGER_SERVICE.createLogger('DataService');
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger, 'Database');
 
-    // Message objet
+    // Object message
     nestLogger.log({
-        message: 'Connexion à la base de données',
+        message: 'Connecting to database',
         data: {
             host: 'localhost',
             port: 5432,
@@ -77,9 +77,9 @@ console.log('\n=== Exemple 5: Messages complexes ===\n');
         }
     });
 
-    // Message avec métadonnées
+    // Message with metadata
     nestLogger.warn({
-        message: 'Requête lente détectée',
+        message: 'Slow query detected',
         data: {
             query: 'SELECT * FROM users',
             duration: 2500
@@ -87,9 +87,9 @@ console.log('\n=== Exemple 5: Messages complexes ===\n');
     });
 }
 
-console.log('\n=== Exemple 6: Intégration avec NestJS Bootstrap ===\n');
+console.log('\n=== Example 6: Integration with NestJS Bootstrap ===\n');
 {
-    // Simulation de l'utilisation dans main.ts de NestJS
+    // Simulation of usage in NestJS main.ts
     const ffs2Logger = LOGGER_SERVICE.createLogger('NestApplication');
     const nestLogger = new NestJSLoggerWrapper(ffs2Logger, 'Bootstrap');
 
@@ -98,7 +98,7 @@ console.log('\n=== Exemple 6: Intégration avec NestJS Bootstrap ===\n');
     nestLogger.log('Port: 3000');
     nestLogger.log('NestJS application successfully started');
 
-    // Dans un vrai projet NestJS:
+    // In a real NestJS project:
     // const app = await NestFactory.create(AppModule, {
     //     logger: nestLogger
     // });
