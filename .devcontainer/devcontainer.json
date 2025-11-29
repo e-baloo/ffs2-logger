@@ -28,16 +28,9 @@
   },
 
   "containerEnv": {
-    "HTTP_PROXY": "http://host.docker.internal:9000",
-    "HTTPS_PROXY": "http://host.docker.internal:9000",
-    "NO_PROXY": "localhost,127.0.0.1,host.docker.internal",
-    "http_proxy": "http://host.docker.internal:9000",
-    "https_proxy": "http://host.docker.internal:9000",
-    "no_proxy": "localhost,127.0.0.1,host.docker.internal"
   },
 
   "remoteEnv": {
-    "NODE_TLS_REJECT_UNAUTHORIZED": "0"
   },
 
   "postCreateCommand": "pnpm install",
