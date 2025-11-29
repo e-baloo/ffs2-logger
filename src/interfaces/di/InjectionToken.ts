@@ -4,7 +4,7 @@
  * @template T - Type of the service associated with this token (used for type safety)
  */
 export class InjectionToken<_T = unknown> {
-    constructor(public readonly description: string) { }
+    constructor(public readonly description: string) {}
 
     toString(): string {
         return `InjectionToken<${this.description}>`;

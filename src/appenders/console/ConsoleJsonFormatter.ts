@@ -16,7 +16,7 @@ export class ConsoleJsonFormatter implements IConsoleJsonFormatter {
         return '';
     }
 
-    setTemplate(_template: string): void { }
+    setTemplate(_template: string): void {}
 
     setCompact(compact: boolean): void {
         this.compact = compact;

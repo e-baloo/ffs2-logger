@@ -61,9 +61,9 @@ export class ConsoleJsonAppender implements ILoggerAppender, ICompact {
         });
     }
 
-    initialize(): void { }
+    initialize(): void {}
 
-    destroy(): void { }
+    destroy(): void {}
 
     isInitialized(): boolean {
         return true;

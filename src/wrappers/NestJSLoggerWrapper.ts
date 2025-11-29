@@ -27,7 +27,7 @@ export class NestJSLoggerWrapper implements LoggerService {
     constructor(
         private readonly logger: ILogger,
         private context?: string
-    ) { }
+    ) {}
 
     /**
      * Sets or modifies the logger context

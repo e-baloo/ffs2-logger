@@ -48,9 +48,9 @@ export class ConsoleAppender implements ILoggerAppender {
         });
     }
 
-    initialize(): void { }
+    initialize(): void {}
 
-    destroy(): void { }
+    destroy(): void {}
 
     isInitialized(): boolean {
         return true;
